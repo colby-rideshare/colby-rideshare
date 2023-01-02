@@ -1,0 +1,21 @@
+{% extends 'carpool/base.html' %}
+
+{% block title%}
+    <title>Delete ride</title>
+{% endblock title %}
+
+{% block content %}
+    <div class="content-section"> <!-- class names here are used for styling -->
+        <form method="POST">
+            {% csrf_token %} <!-- django security features -->
+            <fieldset class="form-group"> <!-- fieldset creates box around content -->
+                <legend class="border-bottom mb-4">Delete ride</legend>
+                <h2>Are you sure you want to delete ride from {{ride.origin}} to {{ride.destination}}?</h2>
+            </fieldset>
+            <div class="form-group">
+                <a class="btn btn-outline-secondary" href="{% url 'ride-detail' object.id %}">No, don't delete</a>
+                <button class="btn btn-outline-danger" type="submit">Yes, delete</button>
+            </div>
+        </form>
+    </div>
+{% endblock content %} 

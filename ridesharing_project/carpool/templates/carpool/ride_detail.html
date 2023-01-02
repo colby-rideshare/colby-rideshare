@@ -1,0 +1,28 @@
+{% extends 'carpool/base.html' %}
+
+{% block title%}
+    <title> Ride details </title>
+{% endblock title %}
+
+{% block content %}
+    <!-- We use "object" instead of "ride" to access the ride object in this html because Django checks for "object" by default unless
+    otherwise specified in "context_object_name" of the class view. Notice how in home.html we use ride. This is because we
+    specify context_object_name in that class view-->
+    <article class="media content-section">
+        <img class="rounded-circle article-img" src="{{ object.driver.profile.image.url }}">
+        <div class="media-body">
+            <div class="article-metadata">
+                <a class="mr-2" href="{% url 'user-rides' object.driver.username %}">{{ object.driver }}</a>
+                <small class="text-muted">At {{ object.departure_time }}</small>
+                {% if object.driver == user %}
+                    <div>
+                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'ride-update' object.id %}">Update details</a>
+                        <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'ride-delete' object.id %}">Delete</a>
+                    </div>
+                {% endif %}
+            </div>
+            <h2 class="article-title">From {{ object.origin }} to {{ object.destination }}</h2>
+            <p class="article-content">Notes on the ride</p>
+        </div>
+    </article>
+{% endblock content %}
