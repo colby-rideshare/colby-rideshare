@@ -12,7 +12,7 @@
             <div class="media-body">
                 <div class="article-metadata">
                     <a class="mr-2" href="{% url 'user-rides' ride.driver.username %}">{{ ride.driver }}</a>
-                    <small class="text-muted">On {{ ride.departure_time }}</small>
+                    <small class="text-muted">At {{ ride.departure_time }}</small>
                 </div>
                 <h2><a class="article-title" href="{% url 'ride-detail' ride.id %}">From {{ ride.origin }} to {{ ride.destination }}</a></h2>
                 <p class="article-content">Notes on the ride</p>
