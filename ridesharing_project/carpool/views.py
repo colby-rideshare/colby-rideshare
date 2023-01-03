@@ -26,7 +26,7 @@ class RideDetailView(DetailView):
     
 class RideCreateView(LoginRequiredMixin, CreateView):
     model = Ride
-    fields = ['origin','destination','departure_time']
+    fields = ['origin','destination','departure_time','notes']
     # can change where we redirect using "success_url = 'path'"
     
     def form_valid(self, form):
@@ -35,7 +35,7 @@ class RideCreateView(LoginRequiredMixin, CreateView):
     
 class RideUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Ride
-    fields = ['origin','destination','departure_time']
+    fields = ['origin','destination','departure_time','notes']
     success_url = '/'
     
     def form_valid(self, form):
