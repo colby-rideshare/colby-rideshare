@@ -4,7 +4,7 @@ from PIL import Image
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    # on _delete argument deals with what to do if user is deleted
+    # on_delete argument deals with what to do if user is deleted
     # models.CASCADE means if user is deleted, delete their profile, but if profile is deleted, keep user
     image = models.ImageField(default='default.jpg', upload_to='profile_pics')  #user profile pic
     
