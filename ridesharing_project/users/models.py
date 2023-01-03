@@ -11,10 +11,13 @@ class Profile(models.Model):
     def __str__(self):
         return f"{self.user.username} Profile"
     
-    def save(self):
-        super().save()  #calls save method of parent models.Model class
-        img = Image.open(self.image.path)  #opens image of current instance
-        if img.height > 300 or img.width > 300:
-            output_size = (300,300)
-            img.thumbnail(output_size)
-            img.save(self.image.path)
+    # method to resize large images when saving profile images locally
+    # need to figure out how to do this with AWS S3
+    
+    # def save(self,*args,**kwargs):
+    #     super().save(*args,**kwargs)  #calls save method of parent models.Model class
+    #     img = Image.open(self.image.path)  #opens image of current instance
+    #     if img.height > 300 or img.width > 300:
+    #         output_size = (300,300)
+    #         img.thumbnail(output_size)
+    #         img.save(self.image.path)
