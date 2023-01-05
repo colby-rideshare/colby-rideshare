@@ -6,7 +6,7 @@
 
 {% block content %}
     <div class="content-section"> <!-- class names here are used for styling -->
-        <form method="POST">
+        <form method="POST" action="{% url 'ride-signup' pk=ride.pk %}">
             {% csrf_token %} <!-- django security features -->
             <fieldset class="form-group"> <!-- fieldset creates box around content -->
                 <legend class="border-bottom mb-4">Delete ride</legend>

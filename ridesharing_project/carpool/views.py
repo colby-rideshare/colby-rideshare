@@ -9,7 +9,7 @@ class RideListView(ListView):
     template_name = 'carpool/home.html'  #without this, by default, checks for 'app_name/model_name_viewtype.html (here viewtype is ListView)
     context_object_name = 'rides'  #without this, by default, calls context "object list" instead of "rides" like we do here
     ordering = ['-departure_time']  #this is way to change ordering -- eventually need to change to prioritize best ride matches
-    paginate_by = 3
+    paginate_by = 25
     
 class UserRideListView(ListView):
     model = Ride
@@ -26,27 +26,47 @@ class RideDetailView(DetailView):
     
 class RideCreateView(LoginRequiredMixin, CreateView):
     model = Ride
-    fields = ['origin','destination','departure_time','notes']
+    fields = ['origin','destination','departure_time','notes','capacity']
     # can change where we redirect using "success_url = 'path'"
     
     def form_valid(self, form):
-        form.instance.driver = self.request.user #set author to current logged in user before calling form_valid normally
+        form.instance.driver = self.request.user #set driver to current logged in user
+        form.instance.num_riders = 0
         return super().form_valid(form)
     
 class RideUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Ride
-    fields = ['origin','destination','departure_time','notes']
+    fields = ['origin','destination','departure_time','notes','capacity']
     success_url = '/'
-    
-    def form_valid(self, form):
-        form.instance.driver = self.request.user #set author to current logged in user before calling form_valid normally
-        return super().form_valid(form)
     
     def test_func(self):
         ride = self.get_object()
         if self.request.user == ride.driver:
             return True
         return False
+    
+class RideSignUpView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Ride
+    fields = ['num_riders']
+    template_name_suffix = '_signup_form'
+    success_url = '/'
+    
+    def test_func(self):
+        ride = self.get_object()
+        if self.request.user != ride.driver:
+            return True
+        return False
+    
+# def ride_signup(request, pk):
+#     ride = Ride.objects.get(pk=pk)
+#     if request.method == 'POST':
+#         # Increment num_riders and save the updated ride instance
+#         ride.num_riders += 1
+#         ride.save()
+#         # Redirect the user back to the ride detail page
+#         return redirect('ride-detail', pk=pk)
+#     else:
+#         return render(request, 'carpool/ride_signup_form.html', {'ride': ride})
     
 class RideDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Ride

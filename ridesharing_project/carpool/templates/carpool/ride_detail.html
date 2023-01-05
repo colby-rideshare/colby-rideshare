@@ -21,7 +21,7 @@
                     </div>
                 {% elif object.driver != user %}
                     <div>
-                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="#">Sign up for this ride</a>
+                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'ride-signup' object.id %}">Sign up for this ride</a>
                     </div>
                 {% endif %}
             </div>
