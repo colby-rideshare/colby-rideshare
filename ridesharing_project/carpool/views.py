@@ -64,11 +64,20 @@ class RideSignUpView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         ride = self.get_object()
         ride.num_riders += 1
         ride.save()
+        #email the person who signed up
         send_mail(
             'Ride Signup Confirmation',
             'You have successfully signup for a ride',
             'max.duchesne@gmail.com',
-            ['mrduch23@colby.edu'],
+            [self.request.user.email],
+            fail_silently=False,
+        )
+        #email the driver
+        send_mail(
+            'Ride Signup Confirmation',
+            f'{self.request.user.username} has signed up for your ride',
+            'max.duchesne@gmail.com',
+            [ride.driver.email],
             fail_silently=False,
         )
         messages.success(request, 'An email was just sent. Please check your inbox')
