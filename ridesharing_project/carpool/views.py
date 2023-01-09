@@ -1,8 +1,11 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404
+from django.contrib import messages
+from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Ride
+from .forms import RideSignUpForm
 
 class RideListView(ListView):
     model = Ride
@@ -47,26 +50,43 @@ class RideUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     
 class RideSignUpView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Ride
-    fields = ['num_riders']
+    form_class = RideSignUpForm  #when fields are specified in the form class, don't need to include them as 'fields' in view
     template_name_suffix = '_signup_form'
     success_url = '/'
-    
+
     def test_func(self):
         ride = self.get_object()
         if self.request.user != ride.driver:
             return True
         return False
     
-# def ride_signup(request, pk):
-#     ride = Ride.objects.get(pk=pk)
-#     if request.method == 'POST':
-#         # Increment num_riders and save the updated ride instance
-#         ride.num_riders += 1
-#         ride.save()
-#         # Redirect the user back to the ride detail page
-#         return redirect('ride-detail', pk=pk)
-#     else:
-#         return render(request, 'carpool/ride_signup_form.html', {'ride': ride})
+    def post(self, request, *args, **kwargs):
+        ride = self.get_object()
+        ride.num_riders += 1
+        ride.save()
+        send_mail(
+            'Ride Signup Confirmation',
+            'You have successfully signup for a ride',
+            'max.duchesne@gmail.com',
+            ['mrduch23@colby.edu'],
+            fail_silently=False,
+        )
+        messages.success(request, 'An email was just sent. Please check your inbox')
+        return redirect('carpool-home')
+    
+        # def form_valid(self, form):
+        #     ride = self.get_object()
+        #     ride.num_riders += 1
+        #     ride.save()
+        #     # send_mail(
+        #     #     'Ride Signup Confirmation',
+        #     #     'You have successfully signup for a ride',
+        #     #     'max.duchesne@gmail.com',
+        #     #     ['mrduch23@colby.edu'],
+        #     #     fail_silently=False,
+        #     # )
+        #     messages.success(self.request, 'An email was just sent. Please check your inbox')
+        #     return super().form_valid(form)
     
 class RideDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Ride
