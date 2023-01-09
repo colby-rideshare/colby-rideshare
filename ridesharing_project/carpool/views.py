@@ -74,6 +74,9 @@ class RideSignUpView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         messages.success(request, 'An email was just sent. Please check your inbox')
         return redirect('carpool-home')
     
+        # the method below had a bug where the button was the num_riders field rather than buttons
+        # the post method above replaces the form_valid method
+        
         # def form_valid(self, form):
         #     ride = self.get_object()
         #     ride.num_riders += 1
