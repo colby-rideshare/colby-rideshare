@@ -14,6 +14,18 @@ class RideListView(ListView):
     ordering = ['-departure_time']  #this is way to change ordering -- eventually need to change to prioritize best ride matches
     paginate_by = 25
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        for ride in context['rides']:
+            ride.spots_left = ride.capacity - ride.num_riders
+            # the code below might be useful to change the styling based on if ride is full or not
+            
+            # if ride.spots_left <= 0:
+            #     ride.is_full = True
+            # else:
+            #     ride.is_full = False
+        return context
+    
 class UserRideListView(ListView):
     model = Ride
     template_name = 'carpool/user_rides.html'  #without this, by default, checks for 'app_name/model_name_viewtype.html (here viewtype is ListView)
@@ -24,8 +36,25 @@ class UserRideListView(ListView):
         user = get_object_or_404(User, username=self.kwargs.get('username'))  #either gets user's username or returns 404 error
         return Ride.objects.filter(driver=user).order_by('-departure_time')  #ordering needs to be done because query overrides it when stated as in RideListView
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        for ride in context['rides']:
+            ride.spots_left = ride.capacity - ride.num_riders
+            # the code below might be useful to change the styling based on if ride is full or not
+            
+            # if ride.spots_left <= 0:
+            #     ride.is_full = True
+            # else:
+            #     ride.is_full = False
+        return context
+    
 class RideDetailView(DetailView):
     model = Ride
+    
+    def get_object(self, queryset=None):
+        ride = super().get_object(queryset)
+        ride.spots_left = ride.capacity - ride.num_riders
+        return ride
     
 class RideCreateView(LoginRequiredMixin, CreateView):
     model = Ride
@@ -57,8 +86,14 @@ class RideSignUpView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
         ride = self.get_object()
         if self.request.user != ride.driver:
-            return True
+            if ride.capacity > ride.num_riders:
+                return True
         return False
+     
+    # this method is working, but the error message is not using CSS styling as expected
+    # def handle_no_permission(self):
+    #     messages.error(self.request, "You are not allowed to sign up for this ride", extra_tags='alert-danger')
+    #     return redirect('carpool-home')
     
     def post(self, request, *args, **kwargs):
         ride = self.get_object()

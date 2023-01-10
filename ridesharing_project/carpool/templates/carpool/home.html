@@ -14,8 +14,7 @@
                     <small class="text-muted">At {{ ride.departure_time }}</small>
                 </div>
                 <h2><a class="article-title" href="{% url 'ride-detail' ride.id %}">From {{ ride.origin }} to {{ ride.destination }}</a></h2>
-                <p class="article-content">Capacity: {{ride.capacity}}</p>
-                <p class="article-content">People signed up: {{ride.num_riders}}</p>
+                <p class="article-content">Spots left: {{ ride.spots_left }}/{{ ride.capacity }}</p>
                 <p class="article-content">Notes: {{ ride.notes }}</p>
             </div>
         </article>
