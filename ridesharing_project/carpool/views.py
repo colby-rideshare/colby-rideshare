@@ -59,7 +59,7 @@ class RideDetailView(DetailView):
 class RideCreateView(LoginRequiredMixin, CreateView):
     model = Ride
     fields = ['origin','destination','departure_time','notes','capacity']
-    # can change where we redirect using "success_url = 'path'"
+    success_url = '/'
     
     def form_valid(self, form):
         form.instance.driver = self.request.user #set driver to current logged in user
