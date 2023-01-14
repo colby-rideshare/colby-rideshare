@@ -3,6 +3,7 @@ boto3==1.26.50
 botocore==1.29.50
 Django==4.1.5
 django-crispy-forms==1.14.0
+django-heroku==0.3.1
 django-storages==1.13.2
 gunicorn==20.1.0
 jmespath==1.0.1
