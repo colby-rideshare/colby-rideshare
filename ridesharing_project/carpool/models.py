@@ -9,6 +9,8 @@ class Ride(models.Model):
     departure_time = models.DateTimeField(default=timezone.now)
     driver = models.ForeignKey(User, on_delete=models.CASCADE)
     notes = models.TextField()
+    capacity = models.IntegerField()
+    num_riders = models.IntegerField()
     
     # should create __str__ method to name rides so they aren't "ride object"
     
