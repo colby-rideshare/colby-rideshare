@@ -100,25 +100,21 @@ class RideSignUpView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         ride.num_riders += 1
         ride.save()
         #email the person who signed up
-        # send_mail(
-        #     'Ride Signup Confirmation',
-        #     'You have successfully signup for a ride',
-        #     'max.duchesne@gmail.com',
-        #     [self.request.user.email],
-        #     fail_silently=False,
-        # )
+        send_mail(
+            'Ride Signup Confirmation',
+            'You have successfully signed up for a ride',
+            'Carpool App <from@example.com>',
+            [self.request.user.email],
+            fail_silently=False,
+        )
         # #email the driver
-        # send_mail(
-        #     'Ride Signup Confirmation',
-        #     f'{self.request.user.username} has signed up for your ride',
-        #     'max.duchesne@gmail.com',
-        #     [ride.driver.email],
-        #     fail_silently=False,
-        # )
-        
-        send_mail("It works!", "This will get sent through Mailgun",
-          "Anymail Sender <from@example.com>", ["max.duchesne@gmail.com"])
-        
+        send_mail(
+            'Ride Signup Notification',
+            f'{self.request.user.username} has signed up for your ride',
+            'Carpool App <from@example.com>',
+            [ride.driver.email],
+            fail_silently=False,
+        )   
         
         messages.success(request, 'An email was just sent. Please check your inbox')
         return redirect('carpool-home')
