@@ -142,7 +142,7 @@ LOGIN_URL = 'login'
 ANYMAIL = {
     # (exact settings here depend on your ESP...)
     "MAILGUN_API_KEY": os.environ.get('MAILGUN_API_KEY'),
-    #"MAILGUN_SENDER_DOMAIN": 'mg.example.com',  # your Mailgun domain, if needed
+    "MAILGUN_SENDER_DOMAIN": 'sandboxb691788a2ec0454890e929286b97c386.mailgun.org',  # your Mailgun domain, if needed
 }
 
 EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"  # or sendgrid.EmailBackend, or...
