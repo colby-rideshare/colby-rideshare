@@ -11,7 +11,7 @@ class RideListView(ListView):
     model = Ride
     template_name = 'carpool/home.html'  #without this, by default, checks for 'app_name/model_name_viewtype.html (here viewtype is ListView)
     context_object_name = 'rides'  #without this, by default, calls context "object list" instead of "rides" like we do here
-    ordering = ['-departure_day']  #this is way to change ordering -- eventually need to change to prioritize best ride matches
+    ordering = ['departure_day']  #this is way to change ordering -- eventually need to change to prioritize best ride matches
     paginate_by = 25
     
     def get_context_data(self, **kwargs):
@@ -34,18 +34,12 @@ class UserRideListView(ListView):
     
     def get_queryset(self):
         user = get_object_or_404(User, username=self.kwargs.get('username'))  #either gets user's username or returns 404 error
-        return Ride.objects.filter(driver=user).order_by('-departure_day')  #ordering needs to be done because query overrides it when stated as in RideListView
+        return Ride.objects.filter(driver=user).order_by('departure_day')  #ordering needs to be done because query overrides it when stated as in RideListView
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         for ride in context['rides']:
             ride.spots_left = ride.capacity - ride.num_riders
-            # the code below might be useful to change the styling based on if ride is full or not
-            
-            # if ride.spots_left <= 0:
-            #     ride.is_full = True
-            # else:
-            #     ride.is_full = False
         return context
     
 class RideDetailView(DetailView):
@@ -91,11 +85,6 @@ class RideSignUpView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             if ride.capacity > ride.num_riders:
                 return True
         return False
-     
-    # this method is working, but the error message is not using CSS styling as expected
-    # def handle_no_permission(self):
-    #     messages.error(self.request, "You are not allowed to sign up for this ride", extra_tags='alert-danger')
-    #     return redirect('carpool-home')
     
     def post(self, request, *args, **kwargs):
         ride = self.get_object()
@@ -120,23 +109,6 @@ class RideSignUpView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         
         messages.success(request, 'An email was just sent. Please check your inbox')
         return redirect('carpool-home')
-    
-        # the method below had a bug where the button was the num_riders field rather than buttons
-        # the post method above replaces the form_valid method
-        
-        # def form_valid(self, form):
-        #     ride = self.get_object()
-        #     ride.num_riders += 1
-        #     ride.save()
-        #     # send_mail(
-        #     #     'Ride Signup Confirmation',
-        #     #     'You have successfully signup for a ride',
-        #     #     'max.duchesne@gmail.com',
-        #     #     ['mrduch23@colby.edu'],
-        #     #     fail_silently=False,
-        #     # )
-        #     messages.success(self.request, 'An email was just sent. Please check your inbox')
-        #     return super().form_valid(form)
     
 class RideDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Ride
