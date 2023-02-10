@@ -18,7 +18,7 @@
     <p>
     Need to move navbar so you can see whole screen<br />
     For some reason if I add closing div inside css it works but not sure if this is best practice<br />
-    Can also add a search bar here
+    Also, navbar moves slightly when going to ride
     </p>
     </div>
     </div>
@@ -34,11 +34,11 @@
     <table class="table">
     <thead>
     <tr>
-    <th class="text-center" scope="col">Date</th>
     <th class="text-center" scope="col">Driver</th>
+    <th class="text-center" scope="col">Date</th>
     <th class="text-center" scope="col">Origin/destination</th>
-    <th class="text-center" scope="col">Spots left</th>
-    <th class="text-center" scope="col">Notes</th>
+    <th class="text-center" scope="col">Spots available</th>
+    <th class="text-center" scope="col">Ride details</th>
     </tr>
     </thead>
 
@@ -46,41 +46,34 @@
     {% for ride in rides %}
         <tbody>
             <tr class="inner-box">
+                <td class="text-center">
+                    <a href="{% url 'user-rides' ride.driver.username %}">
+                      <div class="event-img">
+                        <img class="rounded-circle article-img" src="{{ ride.driver.profile.image.url }}"/>
+                      </div>
+                    </a>
+                  </td>                  
                 <th scope="row">
                     <div class="event-date">
-                        <span>16</span>
-                        <p>Novembar</p>
+                        <span>{{ ride.departure_day|date:'d' }}</span>
+                        <p>{{ ride.departure_day|date:'F' }}</p>
                     </div>
                 </th>
-                <td>
-                    <div class="event-img">
-                        <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" />
-                    </div>
+                <td class="text-center">
+                    <div class="location">
+                        <a href="#">{{ ride.origin }}</a>
+                        <span> → </span>
+                        <a href="#">{{ ride.destination }}</a>
+                    </div>                            
                 </td>
-                <td>
-                    <div class="event-wrap">
-                        <h3><a href="#">Harman Kardon</a></h3>
-                        <div class="meta">
-                            <div class="organizers">
-                                <a href="#">Aslan Lingker</a>
-                            </div>
-                            <div class="categories">
-                                <a href="#">Inspire</a>
-                            </div>
-                            <div class="time">
-                                <span>05:35 AM - 08:00 AM 2h 25'</span>
-                            </div>
-                        </div>
+                <th scope="row">
+                    <div class="event-date">
+                        <span>{{ ride.spots_left }}</span>
                     </div>
-                </td>
-                <td>
-                    <div class="r-no">
-                        <span>Room B3</span>
-                    </div>
-                </td>
-                <td>
+                </th>
+                <td class="text-center">
                     <div class="primary-btn">
-                        <a class="btn btn-primary" href="#">Read More</a>
+                        <a class="btn btn-primary" href="{% url 'ride-detail' ride.id %}">Ride details</a>
                     </div>
                 </td>
             </tr>
