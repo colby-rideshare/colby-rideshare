@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -6,6 +6,9 @@ from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Ride
 from .forms import RideSignUpForm, RideCreateForm
+
+def landing_page(request):
+    return render(request, 'carpool/landing.html')
 
 class RideListView(ListView):
     model = Ride
