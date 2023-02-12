@@ -10,7 +10,7 @@
             {% csrf_token %}
             <h2>Confirm ride from {{ride.origin}} to {{ride.destination}}</h2>
             <div class="form-group">
-                <a class="btn btn-outline-secondary" href="{% url 'ride-detail' object.id %}">No, go back</a>
+                <a class="btn btn-outline-secondary" href="{% url 'carpool-home' %}">No, go back</a>
                 <button class="btn btn-outline-danger" type="submit" name="submit">Yes, confirm</button>
             </div>
         </form>

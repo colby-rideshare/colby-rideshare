@@ -42,61 +42,74 @@
 
 
     {% for ride in rides %}
-        <tbody>
-            <tr class="inner-box">
-                <td class="text-center">
-                    <a href="{% url 'user-rides' ride.driver.username %}">
-                      <div class="text-above-image">
-                        {{ ride.driver.first_name }} {{ ride.driver.last_name }}
-                      </div>
-                      <div class="event-img">
-                        <img class="rounded-circle article-img" src="{{ ride.driver.profile.image.url }}"/>
-                      </div>
-                    </a>
-                  </td>                  
-                <th scope="row">
-                    <div class="event-date">
-                        <span>{{ ride.departure_day|date:'d' }}</span>
-                        <p>{{ ride.departure_day|date:'F' }}</p>
-                    </div>
-                </th>
-                <td class="text-center">
-                    <div class="location">
-                        <a href="#">{{ ride.origin }}</a>
-                        <span> → </span>
-                        <a href="#">{{ ride.destination }}</a>
-                    </div>                            
-                </td>
-                <th scope="row">
-                    <div class="event-date">
-                        <span>{{ ride.spots_left }}</span>
-                    </div>
-                </th>
-                <td class="text-center">
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">
-                        Launch demo modal
-                    </button>
-                    
-                    <!-- Modal -->
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                            <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+        {% if ride.spots_left > 0 %}
+            <tbody>
+                <tr class="inner-box">
+                    <td class="text-center">
+                        <a href="{% url 'user-rides' ride.driver.username %}">
+                        <div class="text-above-image">
+                            {{ ride.driver.first_name }} {{ ride.driver.last_name }}
+                        </div>
+                        <div class="event-img">
+                            <img class="rounded-circle article-img" src="{{ ride.driver.profile.image.url }}"/>
+                        </div>
+                        </a>
+                    </td>                  
+                    <th scope="row">
+                        <div class="event-date">
+                            <span>{{ ride.departure_day|date:'d' }}</span>
+                            <p>{{ ride.departure_day|date:'F' }}</p>
+                        </div>
+                    </th>
+                    <td class="text-center">
+                        <div class="location">
+                            <a href="#">{{ ride.origin }}</a>
+                            <span> → </span>
+                            <a href="#">{{ ride.destination }}</a>
+                        </div>                            
+                    </td>
+                    <th scope="row">
+                        <div class="event-date">
+                            <span>{{ ride.spots_left }}</span>
+                        </div>
+                    </th>
+                    <td class="text-center">
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#Modal{{ride.id}}">
+                            Ride details
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="Modal{{ride.id}}" tabindex="-1" aria-labelledby="Modal{{ride.id}}Label" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title" id="Modal{{ride.id}}Label">Ride details</h5>
+                                <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <h5>Notes from driver:</h5>
+                                    {{ ride.notes }}
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+                                {% if ride.driver != user %}
+                                    <button
+                                        type="button" class="btn btn-primary" onclick="location.href='{% url 'ride-signup' ride.id %}'">Sign up
+                                    </button>
+                                {% else %} 
+                                    <button
+                                        type="button" class="btn btn-primary" onclick="location.href='{% url 'ride-update' ride.id %}'">Edit ride
+                                    </button>
+                                {% endif %}
+                                </div>
                             </div>
-                            <div class="modal-body">...</div>
-                            <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
                             </div>
                         </div>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        </tbody>   
+                    </td>
+                </tr>
+            </tbody>
+        {% endif %}   
     {% endfor %}
 
 
