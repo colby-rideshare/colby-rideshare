@@ -136,7 +136,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = 'carpool-home'
+LOGIN_REDIRECT_URL = 'landing-page'
 LOGIN_URL = 'login'
 
 # github repo: https://github.com/anymail/django-anymail

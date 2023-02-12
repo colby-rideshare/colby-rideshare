@@ -3,8 +3,8 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 
 class Ride(models.Model):
-    origin = models.TextField()
-    destination = models.TextField()
+    origin = models.CharField(max_length=100)
+    destination = models.CharField(max_length=100)
     departure_day = models.DateField()
     #departure_time = choices for different times of day
     driver = models.ForeignKey(User, on_delete=models.CASCADE)

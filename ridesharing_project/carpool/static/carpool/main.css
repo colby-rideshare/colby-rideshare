@@ -89,3 +89,7 @@ a.article-title:hover {
     padding: 0;
     width: 100%;
 }
+
+.text-above-image {
+    margin-bottom: 10px;
+    }

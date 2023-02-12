@@ -48,16 +48,13 @@
             <!-- Collapsible wrapper -->
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Navbar brand -->
-            <a class="navbar-brand mt-2 mt-lg-0" href="{% url 'landing-page' %}">
+            <a class="navbar-brand mt-2 mt-lg-0" style="margin-left: 20px;" href="{% url 'landing-page' %}">
                 <i class="fas fa-taxi"></i>
             </a>
             <!-- Left links -->
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                 <a class="nav-link" href="{% url 'landing-page' %}">Home</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="#">About</a>
                 </li>
             </ul>
             <!-- Left links -->
@@ -71,14 +68,14 @@
                       <a class="nav-link" href="{% url 'carpool-home' %}">Find a ride</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="{% url 'carpool-home' %}">Offer to drive</a>
+                      <a class="nav-link" href="{% url 'ride-create' %}">Offer to drive</a>
                     </li>
                 </ul>
 
                 <!-- Avatar -->
                 {% if user.is_authenticated %}
                     <div class="dropdown">
-                        <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#" id="navbarDropdownMenuAvatar"
+                        <a class="dropdown-toggle d-flex align-items-center hidden-arrow" style="margin-right: 20px;" href="#" id="navbarDropdownMenuAvatar"
                         role="button" data-mdb-toggle="dropdown" aria-expanded="false">
                         <img src="{{ user.profile.image.url }}" class="rounded-circle" height="25"
                             alt="Profile picture" loading="lazy" />

@@ -10,7 +10,7 @@ from .forms import RideSignUpForm, RideCreateForm
 def landing_page(request):
     return render(request, 'carpool/landing.html')
 
-class RideListView(ListView):
+class RideListView(LoginRequiredMixin, ListView):
     model = Ride
     template_name = 'carpool/home.html'  #without this, by default, checks for 'app_name/model_name_viewtype.html (here viewtype is ListView)
     context_object_name = 'rides'  #without this, by default, calls context "object list" instead of "rides" like we do here
@@ -29,7 +29,7 @@ class RideListView(ListView):
             #     ride.is_full = False
         return context
     
-class UserRideListView(ListView):
+class UserRideListView(LoginRequiredMixin, ListView):
     model = Ride
     template_name = 'carpool/user_rides.html'  #without this, by default, checks for 'app_name/model_name_viewtype.html (here viewtype is ListView)
     context_object_name = 'rides'  #without this, by default, calls context "object list" instead of "rides" like we do here
@@ -45,7 +45,7 @@ class UserRideListView(ListView):
             ride.spots_left = ride.capacity - ride.num_riders
         return context
     
-class RideDetailView(DetailView):
+class RideDetailView(LoginRequiredMixin, DetailView):
     model = Ride
     
     def get_object(self, queryset=None):
@@ -101,10 +101,10 @@ class RideSignUpView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             [self.request.user.email],
             fail_silently=False,
         )
-        # #email the driver
+        #email the driver
         send_mail(
             'Ride Signup Notification',
-            f'{self.request.user.username} has signed up for your ride',
+            f'{self.request.user.first_name} {self.request.user.last_name} has signed up for your ride',
             'Carpool App <from@example.com>',
             [ride.driver.email],
             fail_silently=False,
