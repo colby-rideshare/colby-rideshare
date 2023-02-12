@@ -68,28 +68,47 @@
             <div class="d-flex align-items-center">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                      <a class="nav-link" href="#">Find a ride</a>
+                      <a class="nav-link" href="{% url 'carpool-home' %}">Find a ride</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="#">Offer to drive</a>
+                      <a class="nav-link" href="{% url 'carpool-home' %}">Offer to drive</a>
                     </li>
                 </ul>
+
                 <!-- Avatar -->
-                <div class="dropdown">
-                    <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#" id="navbarDropdownMenuAvatar"
-                    role="button" data-mdb-toggle="dropdown" aria-expanded="false">
-                    <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" class="rounded-circle" height="25"
-                        alt="Profile picture" loading="lazy" />
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
-                    <li>
-                        <a class="dropdown-item" href="#">My profile</a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="#">Logout</a>
-                    </li>
-                    </ul>
-                </div>
+                {% if user.is_authenticated %}
+                    <div class="dropdown">
+                        <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#" id="navbarDropdownMenuAvatar"
+                        role="button" data-mdb-toggle="dropdown" aria-expanded="false">
+                        <img src="{{ user.profile.image.url }}" class="rounded-circle" height="25"
+                            alt="Profile picture" loading="lazy" />
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
+                        <li>
+                            <a class="dropdown-item" href="{% url 'profile' %}">My profile</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                        </li>
+                        </ul>
+                    </div>
+                {% else %}
+                    <div class="dropdown">
+                        <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#" id="navbarDropdownMenuAvatar"
+                        role="button" data-mdb-toggle="dropdown" aria-expanded="false">
+                        <img src="https://carpool-app-files.s3.amazonaws.com/default.jpg?AWSAccessKeyId=AKIAXTBRXHKMHGQZOAVD&Signature=kwAJ8HxAIc0NWsMR5%2FWzIEl246M%3D&Expires=1676165158"
+                            class="rounded-circle" height="25" alt="Profile picture" loading="lazy" />
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
+                        <li>
+                            <a class="dropdown-item" href="{% url 'login' %}">Login</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'register' %}">Register</a>
+                        </li>
+                        </ul>
+                    </div>
+                {% endif %}
             </div>
             <!-- Right elements -->
         </div>
