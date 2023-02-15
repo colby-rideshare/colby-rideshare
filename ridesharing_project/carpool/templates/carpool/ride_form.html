@@ -9,41 +9,49 @@
 {% endblock title %}
 
 {% block content %}
-    <div class="content-section"> <!-- class names here are used for styling -->
-        <form method="POST">
-            {% csrf_token %} <!-- django security features -->
-            <fieldset class="form-group"> <!-- fieldset creates box around content -->
-                <legend class="border-bottom mb-4">Enter ride details</legend>
-                    {{ form.non_field_errors }}
-                    <div class="fieldWrapper">
-                    {{ form.origin.errors }}
-                    <label for="{{ form.origin.id_for_label }}">Origin:</label>
-                    {{ form.origin }}
-                    </div>
-                    <div class="fieldWrapper">
-                    {{ form.destination.errors }}
-                    <label for="{{ form.destination.id_for_label }}">Destination:</label>
-                    {{ form.destination }}
-                    </div>
-                    <div class="fieldWrapper">
-                    {{ form.departure_day.errors }}
-                    <label for="{{ form.departure_day.id_for_label }}">Departure Day:</label>
-                    {{ form.departure_day }}
-                    </div>
-                    <div class="fieldWrapper">
-                    {{ form.notes.errors }}
-                    <label for="{{ form.notes.id_for_label }}">Notes:</label>
-                    {{ form.notes }}
-                    </div>
-                    <div class="fieldWrapper">
-                    {{ form.capacity.errors }}
-                    <label for="{{ form.capacity.id_for_label }}">Capacity:</label>
-                    {{ form.capacity }}
-                    </div>
-            </fieldset>
-            <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Post</button>
-            </div>
-        </form>
+
+    <div class="row">
+        <div class="col-md-8 mx-auto border border-secondary rounded">
+            <form method="POST">
+                {% csrf_token %} <!-- django security features -->
+                <fieldset class="form-group"> <!-- fieldset creates box around content -->
+                    <legend class="border-bottom mt-3 mb-4" style="text-align: center;">Enter ride details</legend>
+                        {{ form.non_field_errors }}
+                        <div class="fieldWrapper row">
+                            <div class="col-md-6">
+                                {{ form.origin.errors }}
+                                <label for="{{ form.origin.id_for_label }}">Origin:</label>
+                                {{ form.origin }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.destination.errors }}
+                                <label for="{{ form.destination.id_for_label }}">Destination:</label>
+                                {{ form.destination }}
+                            </div>
+                        </div>
+                        <div class="fieldWrapper row">
+                            <div class="col-md-2">
+                                {{ form.capacity.errors }}
+                                <label for="{{ form.capacity.id_for_label }}">Spots in car:</label>
+                                {{ form.capacity }}
+                            </div>
+                            <div class="col-md-3">
+                                {{ form.departure_day.errors }}
+                                <label for="{{ form.departure_day.id_for_label }}">Day of departure:</label>
+                                {{ form.departure_day }}
+                            </div>
+                        </div>
+                        <div class="fieldWrapper mb-3">
+                            {{ form.notes.errors }}
+                            <label for="{{ form.notes.id_for_label }}">Notes:</label>
+                            {{ form.notes }}
+                        </div>
+                </fieldset>
+                <div class="form-group">
+                    <button class="btn btn-primary mb-3" type="submit">Post</button>
+                </div>
+            </form>
+        </div>
     </div>
+    
 {% endblock content %} 

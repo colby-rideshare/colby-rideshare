@@ -93,3 +93,7 @@ a.article-title:hover {
 .text-above-image {
     margin-bottom: 10px;
     }
+
+.custom-fieldset {
+    margin: 300px;
+    }

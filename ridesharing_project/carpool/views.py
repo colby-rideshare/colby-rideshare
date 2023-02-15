@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Ride
 from .forms import RideSignUpForm, RideCreateForm
+import os
 
 def landing_page(request):
     return render(request, 'carpool/landing.html')
@@ -57,9 +58,14 @@ class RideCreateView(LoginRequiredMixin, CreateView):
     model = Ride
     form_class = RideCreateForm
     # fields = ['origin','destination','departure_time','notes','capacity']
-    success_url = '/'
+    success_url = '/rides/'
     
     def form_valid(self, form):
+        if form.instance.capacity <= 0:
+            messages.error(self.request, "Spots in car must be greater than 0")
+            return super().form_invalid(form)
+        else:
+            messages.success(self.request, "Your ride has been posted successfully")
         form.instance.driver = self.request.user #set driver to current logged in user
         form.instance.num_riders = 0
         return super().form_valid(form)
@@ -68,13 +74,21 @@ class RideUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Ride
     form_class = RideCreateForm
     #fields = ['origin','destination','departure_time','notes','capacity']
-    success_url = '/'
+    success_url = '/rides/'
     
     def test_func(self):
         ride = self.get_object()
         if self.request.user == ride.driver:
             return True
         return False
+    
+    def form_valid(self, form):
+        capacity = form.cleaned_data.get('capacity')
+        if capacity <= 0:
+            messages.error(self.request, "Spots in car must be greater than 0")
+            return self.form_invalid(form)
+        messages.success(self.request, "Your ride has been updated successfully")
+        return super().form_valid(form)
     
 class RideSignUpView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Ride
@@ -97,7 +111,8 @@ class RideSignUpView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         send_mail(
             'Ride Signup Confirmation',
             'You have successfully signed up for a ride',
-            'Carpool App <from@example.com>',
+            # "{os.environ.get('EMAIL_USER')}",
+            'max.duchesne@gmail.com',
             [self.request.user.email],
             fail_silently=False,
         )
@@ -105,7 +120,8 @@ class RideSignUpView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         send_mail(
             'Ride Signup Notification',
             f'{self.request.user.first_name} {self.request.user.last_name} has signed up for your ride',
-            'Carpool App <from@example.com>',
+            # "{os.environ.get('EMAIL_USER')}",
+            'max.duchesne@gmail.com',
             [ride.driver.email],
             fail_silently=False,
         )   

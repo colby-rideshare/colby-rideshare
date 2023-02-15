@@ -56,6 +56,12 @@
                 <li class="nav-item">
                 <a class="nav-link" href="{% url 'landing-page' %}">Home</a>
                 </li>
+                <li class="nav-item">
+                <a class="nav-link" href="{% url 'carpool-home' %}">Find a ride</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="{% url 'ride-create' %}">Offer to drive</a>
+                </li>
             </ul>
             <!-- Left links -->
             </div>
@@ -63,8 +69,6 @@
 
             <!-- Right elements -->
             <div class="d-flex align-items-center">
-                <a class="nav-link" style="margin-right: 10px;" href="{% url 'carpool-home' %}">Find a ride</a>
-                <a class="nav-link" style="margin-right: 10px;" href="{% url 'ride-create' %}">Offer to drive</a>
 
                 <!-- Avatar -->
                 {% if user.is_authenticated %}
@@ -85,9 +89,9 @@
                     </div>
                 {% else %}
                     <div class="dropdown">
-                        <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#" id="navbarDropdownMenuAvatar"
+                        <a class="dropdown-toggle d-flex align-items-center hidden-arrow" style="margin-right: 20px;" href="#" id="navbarDropdownMenuAvatar"
                         role="button" data-mdb-toggle="dropdown" aria-expanded="false">
-                        <img src="https://carpool-app-files.s3.amazonaws.com/default.jpg?AWSAccessKeyId=AKIAXTBRXHKMHGQZOAVD&Signature=kwAJ8HxAIc0NWsMR5%2FWzIEl246M%3D&Expires=1676165158"
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR82DN9JU-hbIhhkPR-AX8KiYzA4fBMVwjLAG82fz7GLg&s"
                             class="rounded-circle" height="25" alt="Profile picture" loading="lazy" />
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
