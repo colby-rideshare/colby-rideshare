@@ -12,7 +12,10 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
 import django_on_heroku  # Configure Django App for Heroku
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,12 +41,17 @@ INSTALLED_APPS = [
     'carpool.apps.CarpoolConfig',
     'users.apps.UsersConfig',
     'crispy_forms',
+    
+    #anymail is needed to use mailgun
+    #'anymail',  
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "bootstrap_datepicker_plus",
 ]
 
 MIDDLEWARE = [
@@ -112,7 +120,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/New_York'
 
 USE_I18N = True
 
@@ -123,7 +131,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -134,9 +142,21 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = 'carpool-home'
+LOGIN_REDIRECT_URL = 'landing-page'
 LOGIN_URL = 'login'
 
+# github repo: https://github.com/anymail/django-anymail
+# ANYMAIL = {
+#     # (exact settings here depend on your ESP...)
+#     "MAILGUN_API_KEY": os.environ.get('MAILGUN_API_KEY'),
+#     "MAILGUN_SENDER_DOMAIN": 'sandboxb691788a2ec0454890e929286b97c386.mailgun.org',  # your Mailgun domain, if needed
+# }
+
+# EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"  # or sendgrid.EmailBackend, or...
+# DEFAULT_FROM_EMAIL = "test-sender@example.com"  # if you don't already have this in settings
+# SERVER_EMAIL = "test-server@example.com"  # ditto (default from-email for Django errors)
+
+# #these settings are for SMTP backend using gmail:
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587

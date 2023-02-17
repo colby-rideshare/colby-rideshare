@@ -9,7 +9,7 @@ class Profile(models.Model):
     image = models.ImageField(default='default.jpg', upload_to='profile_pics')  #user profile pic
     
     def __str__(self):
-        return f"{self.user.username} Profile"
+        return f"{self.user.first_name} {self.user.last_name}'s Profile"
     
     # method to resize large images when saving profile images locally
     # need to figure out how to do this with AWS S3

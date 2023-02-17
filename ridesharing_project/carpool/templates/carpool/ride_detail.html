@@ -12,8 +12,8 @@
         <img class="rounded-circle article-img" src="{{ object.driver.profile.image.url }}">
         <div class="media-body">
             <div class="article-metadata">
-                <a class="mr-2" href="{% url 'user-rides' object.driver.username %}">{{ object.driver }}</a>
-                <small class="text-muted">At {{ object.departure_time }}</small>
+                <a class="mr-2" href="{% url 'user-rides' object.driver.username %}">{{ object.driver.first_name }} {{ object.driver.last_name }}</a>
+                <small class="text-muted">On {{ ride.departure_day|date:'F d' }}<!-- at {{ ride.departure_time|date:'P' }}--></small>
                 {% if object.driver == user %}
                     <div>
                         <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'ride-update' object.id %}">Update details</a>

@@ -1,14 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils import timezone
 from django.urls import reverse
 
 class Ride(models.Model):
-    origin = models.TextField()
-    destination = models.TextField()
-    departure_time = models.DateTimeField(default=timezone.now)
+    origin = models.CharField(max_length=100)
+    destination = models.CharField(max_length=100)
+    departure_day = models.DateField()
+    #departure_time = choices for different times of day
     driver = models.ForeignKey(User, on_delete=models.CASCADE)
-    notes = models.TextField()
+    notes = models.TextField(blank=True)
     capacity = models.IntegerField()
     num_riders = models.IntegerField()
     

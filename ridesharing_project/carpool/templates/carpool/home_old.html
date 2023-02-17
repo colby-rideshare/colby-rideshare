@@ -1,11 +1,10 @@
 {% extends 'carpool/base.html' %}
 
 {% block title%}
-    <title> {{view.kwargs.username}}'s Rides </title>
+    <title> Home Page </title>
 {% endblock title %}
 
 {% block content %}
-    <h1 class="mb-3">Rides by {{view.kwargs.username}}</h1>
     {% for ride in rides %}
         <article class="media content-section">
             <img class="rounded-circle article-img" src="{{ ride.driver.profile.image.url }}">
