@@ -1,0 +1,42 @@
+{% extends 'carpool/base.html' %}
+
+{% block title%}
+    <title> Home </title>
+{% endblock title %}
+
+{% block content %}
+
+<div class="card-group">
+    <div class="card">
+    <img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp" class="card-img-top" alt="Hollywood Sign on The Hill"/>
+    <div class="card-body">
+        <h5 class="card-title text-center">Drivers</h5>
+        <p class="card-text" style="display: block; margin: 25px;">Reasons for driving: good for environment, help the community, riders encouraged to chip in for gas</p>
+        <a href="{% url 'ride-create' %}" class="btn btn-primary" style="display: block; margin: 25px;">
+            Offer to drive
+        </a>
+    </div>
+    </div>
+    <div class="card">
+    <img src="https://mdbcdn.b-cdn.net/img/new/standard/city/042.webp" class="card-img-top" alt="Palm Springs Road"/>
+    <div class="card-body">
+        <h5 class="card-title text-center">Riders</h5>
+        <p class="card-text" style="display: block; margin: 25px;">Reasons for riding: convenient, cheap, get closer with community</p>
+        <a href="{% url 'carpool-home' %}" class="btn btn-primary" style="display: block; margin: 25px;">
+            Find a ride
+        </a>
+    </div>
+    </div>
+    <div class="card">
+    <img src="https://mdbcdn.b-cdn.net/img/new/standard/city/043.webp" class="card-img-top" alt="Los Angeles Skyscrapers"/>
+    <div class="card-body">
+        <h5 class="card-title text-center">About Carpool App</h5>
+        <p class="card-text" style="display: block; margin: 25px;">Created by students to help students</p>
+        <a href="#" class="btn btn-primary" style="display: block; margin: 25px;">
+            Learn more
+        </a>
+    </div>
+    </div>
+</div>
+
+{% endblock content %}
