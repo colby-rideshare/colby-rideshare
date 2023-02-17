@@ -20,10 +20,10 @@ class RideCreateForm(forms.ModelForm):
             'capacity': forms.NumberInput(attrs={'class': 'form-control'})
         }
         
-    def save(self, commit=True):
-        instance = super().save(commit=False)
-        if not self.cleaned_data['notes']:
-            instance.notes = "N/A"
-        if commit:
-            instance.save()
-        return instance
+    # def save(self, commit=True):
+    #     instance = super().save(commit=False)
+    #     if not self.cleaned_data['notes']:
+    #         instance.notes = "N/A"
+    #     if commit:
+    #         instance.save()
+    #     return instance

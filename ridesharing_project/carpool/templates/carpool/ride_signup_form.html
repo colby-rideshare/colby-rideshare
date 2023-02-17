@@ -5,14 +5,16 @@
 {% endblock title %}
 
 {% block content %}
-    <div class="content-section">
-        <form method="POST" action="{% url 'ride-signup' object.id %}">
-            {% csrf_token %}
-            <h2>Confirm ride from {{ride.origin}} to {{ride.destination}}</h2>
-            <div class="form-group">
-                <a class="btn btn-outline-secondary" href="{% url 'ride-detail' object.id %}">No, go back</a>
-                <button class="btn btn-outline-danger" type="submit" name="submit">Yes, confirm</button>
-            </div>
-        </form>
+    <div class="row d-flex align-items-center">
+        <div class="col-md-4 mx-auto mt-4 text-center border border-secondary rounded">
+            <form method="POST" action="{% url 'ride-signup' object.id %}">
+                {% csrf_token %}
+                <h2 class="mt-3">Confirm ride from {{ride.origin}} to {{ride.destination}}</h2>
+                <div class="form-group">
+                    <a class="btn btn-secondary mb-3" href="{% url 'carpool-home' %}">No, go back</a>
+                    <button class="btn btn-primary mb-3" type="submit" name="submit">Yes, confirm</button>
+                </div>
+            </form>
+        </div>
     </div>
 {% endblock content %} 

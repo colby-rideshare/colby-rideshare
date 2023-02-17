@@ -38,7 +38,10 @@ INSTALLED_APPS = [
     'carpool.apps.CarpoolConfig',
     'users.apps.UsersConfig',
     'crispy_forms',
-    'anymail',
+    
+    #anymail is needed to use mailgun
+    #'anymail',  
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -125,7 +128,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -136,27 +139,27 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = 'carpool-home'
+LOGIN_REDIRECT_URL = 'landing-page'
 LOGIN_URL = 'login'
 
 # github repo: https://github.com/anymail/django-anymail
-ANYMAIL = {
-    # (exact settings here depend on your ESP...)
-    "MAILGUN_API_KEY": os.environ.get('MAILGUN_API_KEY'),
-    "MAILGUN_SENDER_DOMAIN": 'sandboxb691788a2ec0454890e929286b97c386.mailgun.org',  # your Mailgun domain, if needed
-}
+# ANYMAIL = {
+#     # (exact settings here depend on your ESP...)
+#     "MAILGUN_API_KEY": os.environ.get('MAILGUN_API_KEY'),
+#     "MAILGUN_SENDER_DOMAIN": 'sandboxb691788a2ec0454890e929286b97c386.mailgun.org',  # your Mailgun domain, if needed
+# }
 
-EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"  # or sendgrid.EmailBackend, or...
-DEFAULT_FROM_EMAIL = "test-sender@example.com"  # if you don't already have this in settings
-SERVER_EMAIL = "test-server@example.com"  # ditto (default from-email for Django errors)
+# EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"  # or sendgrid.EmailBackend, or...
+# DEFAULT_FROM_EMAIL = "test-sender@example.com"  # if you don't already have this in settings
+# SERVER_EMAIL = "test-server@example.com"  # ditto (default from-email for Django errors)
 
 # #these settings are for SMTP backend using gmail:
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
-# EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
 
 # can check django storages documentation for more info on using AWS S3
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
