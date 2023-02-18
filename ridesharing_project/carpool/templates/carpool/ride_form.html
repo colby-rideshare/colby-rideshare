@@ -2,7 +2,7 @@
 
 {% block title%}
     <title>Post a ride</title>
-    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnf3ImYPmQDgbh_kSg32Im7i8d1NIEZac&libraries=places&callback=initMap"></script>
+    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnf3ImYPmQDgbh_kSg32Im7i8d1NIEZac&libraries=places&callback=initialize" defer></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 
     <script
@@ -13,22 +13,18 @@
 
     <script>
         function initialize(){
-            console.log('11111');
-            var input = document.getElementById('autocomplete');
-            var autocomplete = new google.maps.places.Autocomplete(input);
-            autocomplete.addListener('place_changed', function(){
-                var place = autocomplete.getPlace();
-            });
-            } 
-        google.maps.event.addDomListener(window, 'load', initialize);
+            const input = document.getElementById("autocomplete");
+            const input2 = document.getElementById("autocomplete2");
+            const autocomplete = new google.maps.places.Autocomplete(input);
+            const autocomplete2 = new google.maps.places.Autocomplete(input2);
+            }
+            
     </script>
 
     {{ form.media }}
 {% endblock title %}
 
 {% block content %}
-<input type="text" id="autocomplete"/>
-
     <div class="row">
         <div class="col-md-8 mx-auto border border-secondary rounded">
             <form method="POST">
@@ -40,12 +36,12 @@
                             <div class="col-md-6">
                                 {{ form.origin.errors }}
                                 <label for="{{ form.origin.id_for_label }}">Origin:</label>
-                                {{ form.origin }}
+                                <input type="text" id="autocomplete"/>
                             </div>
                             <div class="col-md-6">
                                 {{ form.destination.errors }}
                                 <label for="{{ form.destination.id_for_label }}">Destination:</label>
-                                
+                                    <input type="text" id="autocomplete2"/>
                             </div>
                         </div>
                         <div class="fieldWrapper row">
