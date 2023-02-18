@@ -26,6 +26,8 @@ class RideListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         for ride in context['rides']:
             ride.spots_left = ride.capacity - ride.num_riders
+            ride.origin_code = ride.origin
+            ride.dst_code = ride.destination
             # the code below might be useful to change the styling based on if ride is full or not
             
             # if ride.spots_left <= 0:
