@@ -61,11 +61,6 @@ class RideCreateView(LoginRequiredMixin, CreateView):
     success_url = '/rides/'
     
     def form_valid(self, form):
-        if form.instance.capacity <= 0:
-            messages.error(self.request, "Spots in car must be greater than 0")
-            return super().form_invalid(form)
-        else:
-            messages.success(self.request, "Your ride has been posted successfully")
         form.instance.driver = self.request.user #set driver to current logged in user
         form.instance.num_riders = 0
         return super().form_valid(form)
@@ -81,14 +76,6 @@ class RideUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         if self.request.user == ride.driver:
             return True
         return False
-    
-    def form_valid(self, form):
-        capacity = form.cleaned_data.get('capacity')
-        if capacity <= 0:
-            messages.error(self.request, "Spots in car must be greater than 0")
-            return self.form_invalid(form)
-        messages.success(self.request, "Your ride has been updated successfully")
-        return super().form_valid(form)
     
 class RideSignUpView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Ride
