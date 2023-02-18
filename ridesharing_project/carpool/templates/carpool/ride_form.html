@@ -13,8 +13,8 @@
 
     <script>
         function initialize(){
-            const input = document.getElementById("autocomplete");
-            const input2 = document.getElementById("autocomplete2");
+            const input = document.getElementById("origin");
+            const input2 = document.getElementById("destination");
             const autocomplete = new google.maps.places.Autocomplete(input);
             const autocomplete2 = new google.maps.places.Autocomplete(input2);
             }
@@ -36,12 +36,12 @@
                             <div class="col-md-6">
                                 {{ form.origin.errors }}
                                 <label for="{{ form.origin.id_for_label }}">Origin:</label>
-                                <input type="text" id="autocomplete"/>
+                                {{form.origin}}
                             </div>
                             <div class="col-md-6">
                                 {{ form.destination.errors }}
                                 <label for="{{ form.destination.id_for_label }}">Destination:</label>
-                                    <input type="text" id="autocomplete2"/>
+                                    {{form.destination}}
                             </div>
                         </div>
                         <div class="fieldWrapper row">

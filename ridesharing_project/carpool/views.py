@@ -26,9 +26,6 @@ class RideListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         for ride in context['rides']:
             ride.spots_left = ride.capacity - ride.num_riders
-            ride.dst_code = None 
-            ride.origin_code = None 
-            print(len(gmaps.geocode(ride.origin)))
             # the code below might be useful to change the styling based on if ride is full or not
             
             # if ride.spots_left <= 0:
