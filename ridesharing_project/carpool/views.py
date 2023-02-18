@@ -7,6 +7,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from .models import Ride
 from .forms import RideSignUpForm, RideCreateForm
 import os
+from . import gmaps
 
 def landing_page(request):
     return render(request, 'carpool/landing.html')
@@ -16,12 +17,18 @@ class RideListView(LoginRequiredMixin, ListView):
     template_name = 'carpool/home.html'  #without this, by default, checks for 'app_name/model_name_viewtype.html (here viewtype is ListView)
     context_object_name = 'rides'  #without this, by default, calls context "object list" instead of "rides" like we do here
     ordering = ['departure_day']  #this is way to change ordering -- eventually need to change to prioritize best ride matches
-    paginate_by = 25
+    paginate_by = 5
+
+
+
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         for ride in context['rides']:
             ride.spots_left = ride.capacity - ride.num_riders
+            ride.dst_code = None 
+            ride.origin_code = None 
+            print(len(gmaps.geocode(ride.origin)))
             # the code below might be useful to change the styling based on if ride is full or not
             
             # if ride.spots_left <= 0:

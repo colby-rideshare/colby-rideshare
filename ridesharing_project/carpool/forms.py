@@ -10,14 +10,8 @@ class RideSignUpForm(forms.ModelForm):
 class RideCreateForm(forms.ModelForm):
     class Meta:
         model = Ride
-        t = 'Day'
-        choices = [
-                    ('Morning', 'Morining (6-11:59am)')]
-
         fields = ['origin','destination','departure_day','time', 'notes','capacity']
         widgets = {
-            'origin': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: Waterville, ME'}),
-            'destination': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: Boston, MA'}),
             #the date time picker documentation is here: https://pypi.org/project/django-bootstrap-datepicker-plus/#description
             'departure_day': DatePickerInput(),
             'notes': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Ex: Need to pick up a friend at Bowdoin', 'required': False}),
