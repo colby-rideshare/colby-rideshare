@@ -2,19 +2,29 @@
 
 {% block title%}
     <title>Post a ride</title>
-
+    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnf3ImYPmQDgbh_kSg32Im7i8d1NIEZac&libraries=places&callback=initialize" defer></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 
     <script
     type="text/javascript"
     src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.1.0/mdb.min.js"
     ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+
+    <script>
+        function initialize(){
+            const input = document.getElementById("origin");
+            const input2 = document.getElementById("destination");
+            const autocomplete = new google.maps.places.Autocomplete(input);
+            const autocomplete2 = new google.maps.places.Autocomplete(input2);
+            }
+            
+    </script>
 
     {{ form.media }}
 {% endblock title %}
 
 {% block content %}
-
     <div class="row">
         <div class="col-md-8 mx-auto border border-secondary rounded">
             <form method="POST">
@@ -26,12 +36,12 @@
                             <div class="col-md-6">
                                 {{ form.origin.errors }}
                                 <label for="{{ form.origin.id_for_label }}">Origin:</label>
-                                {{ form.origin }}
+                                {{form.origin}}
                             </div>
                             <div class="col-md-6">
                                 {{ form.destination.errors }}
                                 <label for="{{ form.destination.id_for_label }}">Destination:</label>
-                                {{ form.destination }}
+                                    {{form.destination}}
                             </div>
                         </div>
                         <div class="fieldWrapper row">

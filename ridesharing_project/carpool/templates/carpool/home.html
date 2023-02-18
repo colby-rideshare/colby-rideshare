@@ -39,8 +39,6 @@
     <th class="text-center" scope="col">Sign up</th>
     </tr>
     </thead>
-
-
     {% for ride in rides %}
         {% if ride.spots_left > 0 %}
             <tbody>
@@ -62,10 +60,14 @@
                         </div>
                     </th>
                     <td class="text-center">
-                        <div class="location">
-                            <a href="#">{{ ride.origin }}</a>
-                            <span> → </span>
-                            <a href="#">{{ ride.destination }}</a>
+                        <div class="ratio ratio-1x1">
+                            <iframe
+                              width="450"
+                              height="250"
+                              frameborder="0" style="border:0"
+                              referrerpolicy="no-referrer-when-downgrade"
+                              src="https://www.google.com/maps/embed/v1/directions?key=AIzaSyDnf3ImYPmQDgbh_kSg32Im7i8d1NIEZac&origin={{ride.origin_code}}&destination={{ride.dst_code}}">
+                            </iframe>
                         </div>                            
                     </td>
                     <th scope="row">
@@ -356,8 +358,11 @@
       }
     
     </style>
-    <script type="text/javascript">
-    
+    <script type="text/javascript">    
     </script>
+   <!--  <script async
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnf3ImYPmQDgbh_kSg32Im7i8d1NIEZac&callback=initMap&v=weekly"
+    ></script>  --> 
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 </div>
 {% endblock content %}
