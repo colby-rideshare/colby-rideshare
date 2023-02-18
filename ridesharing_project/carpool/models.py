@@ -6,6 +6,7 @@ class Ride(models.Model):
     origin = models.CharField(max_length=100)
     destination = models.CharField(max_length=100)
     departure_day = models.DateField()
+    time = models.CharField(max_length = 100)
     #departure_time = choices for different times of day
     driver = models.ForeignKey(User, on_delete=models.CASCADE)
     notes = models.TextField(blank=True)

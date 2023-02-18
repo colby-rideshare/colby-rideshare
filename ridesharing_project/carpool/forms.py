@@ -1,6 +1,6 @@
 from django import forms
 from .models import Ride
-from bootstrap_datepicker_plus.widgets import DatePickerInput
+from bootstrap_datepicker_plus.widgets import DatePickerInput, TimePickerInput
 
 class RideSignUpForm(forms.ModelForm):
     class Meta:
@@ -10,7 +10,11 @@ class RideSignUpForm(forms.ModelForm):
 class RideCreateForm(forms.ModelForm):
     class Meta:
         model = Ride
-        fields = ['origin','destination','departure_day','notes','capacity']
+        t = 'Day'
+        choices = [
+                    ('Morning', 'Morining (6-11:59am)')]
+
+        fields = ['origin','destination','departure_day','time', 'notes','capacity']
         widgets = {
             'origin': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: Waterville, ME'}),
             'destination': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: Boston, MA'}),
