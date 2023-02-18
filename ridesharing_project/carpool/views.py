@@ -9,6 +9,7 @@ from .forms import RideSignUpForm, RideCreateForm
 import os
 from . import gmaps
 
+
 def landing_page(request):
     return render(request, 'carpool/landing.html')
 
@@ -17,7 +18,7 @@ class RideListView(LoginRequiredMixin, ListView):
     template_name = 'carpool/home.html'  #without this, by default, checks for 'app_name/model_name_viewtype.html (here viewtype is ListView)
     context_object_name = 'rides'  #without this, by default, calls context "object list" instead of "rides" like we do here
     ordering = ['departure_day']  #this is way to change ordering -- eventually need to change to prioritize best ride matches
-    paginate_by = 5
+    paginate_by = 20
 
 
 
