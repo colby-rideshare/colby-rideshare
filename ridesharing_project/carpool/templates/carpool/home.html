@@ -34,13 +34,13 @@
     <tr>
     <th class="text-center" scope="col">Driver</th>
     <th class="text-center" scope="col">Date</th>
-    <th class="text-center" scope="col">Origin/destination</th>
+    <th class="text-center" scope="col">Route</th>
     <th class="text-center" scope="col">Spots available</th>
     <th class="text-center" scope="col">Sign up</th>
     </tr>
     </thead>
     {% for ride in rides %}
-        {% if ride.spots_left > 0 %}
+        {% if ride.spots_left > 0 %} <!-- should do this in views instead -->
             <tbody>
                 <tr class="inner-box">
                     <td class="text-center">
