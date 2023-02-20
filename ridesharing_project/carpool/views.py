@@ -24,7 +24,7 @@ class RideListView(LoginRequiredMixin, ListView):
     paginate_by = 5
     
     def get_context_data(self, **kwargs):
-        #self.get_gas_price()
+        self.get_gas_price()
         context = super().get_context_data(**kwargs)
         for ride in context['rides']:
             ride.spots_left = ride.capacity - ride.num_riders
@@ -32,49 +32,39 @@ class RideListView(LoginRequiredMixin, ListView):
             ride.dst_code = ride.destination
         return context
     
-    #this code gets context for rides with capacity left
-    # def get_context_data(self, **kwargs):
-    #     self.get_gas_price()
-    #     context = super().get_context_data(**kwargs)
-    #     rides_with_spots_left = []
-    #     for ride in context['rides']:
-    #         ride.spots_left = ride.capacity - ride.num_riders
-    #         if ride.spots_left > 0:
-    #             ride.origin_code = ride.origin
-    #             ride.dst_code = ride.destination
-    #             rides_with_spots_left.append(ride)
-    #     context['rides'] = rides_with_spots_left
-    #     return context
 
     
     #fetch gas price if current data is over one week old
     #django does not call custom methods, so need to call it in
     #an overwritten method like get_context_data
-    # def get_gas_price(self):
-    #     gas_model = GasPrice.objects.first()
-    #     current_time = timezone.now()
-    #     if current_time > gas_model.next_update:
+    def get_gas_price(self):
+        gas_model = GasPrice.objects.first()
+        current_time = timezone.now()
+        if current_time > gas_model.next_update:
             
-    #         #make api call and get gas prices in Portland, ME
-    #         #docs: https://collectapi.com/api/gasPrice/gas-prices-api?tab=pricing
-    #         connection = http.client.HTTPSConnection("api.collectapi.com")
-    #         headers = {
-    #             'content-type': "application/json",
-    #             'authorization': "apikey 3rsMU4US801zfhAZt9Kauk:6HSs8KPnwAOqNKhLpVGf7P"
-    #             }
-    #         connection.request("GET", "/gasPrice/stateUsaPrice?state=ME", headers=headers)
-    #         response = connection.getresponse()
-    #         data = response.read()  #dtype is bytes
-    #         data_string = data.decode("utf-8")  #decode to utf8
-    #         data_dict = json.loads(data_string)  #load as dict
-    #         portland_gas_price = data_dict["result"]["cities"][2]["gasoline"]  #get gasoline price in Portland, ME
-    #         portland_gas_price = float(portland_gas_price)
+            #make api call and get gas prices in Portland, ME
+            #docs: https://collectapi.com/api/gasPrice/gas-prices-api?tab=pricing
+            connection = http.client.HTTPSConnection("api.collectapi.com")
+            headers = {
+                'content-type': "application/json",
+                'authorization': "apikey 3rsMU4US801zfhAZt9Kauk:6HSs8KPnwAOqNKhLpVGf7P"
+                }
+            connection.request("GET", "/gasPrice/stateUsaPrice?state=ME", headers=headers)
+            response = connection.getresponse()
+            data = response.read()  #dtype is bytes
+            data_string = data.decode("utf-8")  #decode to utf8
+            data_dict = json.loads(data_string)  #load as dict
+            if data_dict['success'] == False:
+                print('API DOWN')
+                return 
+            portland_gas_price = data_dict["result"]["cities"][2]["gasoline"]  #get gasoline price in Portland, ME
+            portland_gas_price = float(portland_gas_price)
             
-    #         #update GasPrice model
-    #         gas_model.last_update = current_time
-    #         gas_model.next_update = current_time + timedelta(weeks=1)
-    #         gas_model.gas_price = portland_gas_price
-    #         gas_model.save()
+            #update GasPrice model
+            gas_model.last_update = current_time
+            gas_model.next_update = current_time + timedelta(weeks=1)
+            gas_model.gas_price = portland_gas_price
+            gas_model.save()
     
 class UserRideListView(LoginRequiredMixin, ListView):
     model = Ride
