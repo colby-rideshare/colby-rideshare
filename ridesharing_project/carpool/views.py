@@ -5,16 +5,18 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Ride, GasPrice
-from .forms import RideSignUpForm, RideCreateForm
+from .forms import RideSignUpForm, RideCreateForm, RideUpdateForm
 import os
 from . import gmaps
 from datetime import timedelta
 from django.utils import timezone
 import http.client
 import json
+from django.db.models import Q
 
 def landing_page(request):
-    return render(request, 'carpool/landing.html')
+    context = {'user': request.user}
+    return render(request, 'carpool/landing.html', context)
 
 class RideListView(LoginRequiredMixin, ListView):
     model = Ride
@@ -22,6 +24,9 @@ class RideListView(LoginRequiredMixin, ListView):
     context_object_name = 'rides'  #without this, by default, calls context "object list" instead of "rides" like we do here
     ordering = ['departure_day']  #this is way to change ordering -- eventually need to change to prioritize best ride matches
     paginate_by = 5
+    
+    def get_queryset(self):
+        return Ride.objects.filter(~Q(driver=self.request.user))
     
     def get_context_data(self, **kwargs):
         self.get_gas_price()
@@ -77,9 +82,15 @@ class UserRideListView(LoginRequiredMixin, ListView):
         return Ride.objects.filter(driver=user).order_by('departure_day')  #ordering needs to be done because query overrides it when stated as in RideListView
     
     def get_context_data(self, **kwargs):
+        #self.get_gas_price()
         context = super().get_context_data(**kwargs)
+        context['first_name'] = context['rides'][0].driver.first_name
+        context['last_name'] = context['rides'][0].driver.last_name
         for ride in context['rides']:
             ride.spots_left = ride.capacity - ride.num_riders
+            ride.origin_code = ride.origin
+            ride.dst_code = ride.destination
+            ride.driver = ride.driver
         return context
     
 class RideDetailView(LoginRequiredMixin, DetailView):
@@ -94,7 +105,7 @@ class RideCreateView(LoginRequiredMixin, CreateView):
     model = Ride
     form_class = RideCreateForm
     # fields = ['origin','destination','departure_time','notes','capacity']
-    success_url = '/rides/'
+    success_url = '/'
     
     def form_valid(self, form):
         form.instance.driver = self.request.user #set driver to current logged in user
@@ -103,9 +114,10 @@ class RideCreateView(LoginRequiredMixin, CreateView):
     
 class RideUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Ride
-    form_class = RideCreateForm
+    form_class = RideUpdateForm
     #fields = ['origin','destination','departure_time','notes','capacity']
-    success_url = '/rides/'
+    template_name = 'carpool/ride_update_form.html'
+    success_url = '/'
     
     def test_func(self):
         ride = self.get_object()

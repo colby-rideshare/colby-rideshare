@@ -84,6 +84,9 @@
                             <a class="dropdown-item" href="{% url 'profile' %}">My profile</a>
                         </li>
                         <li>
+                            <a class="dropdown-item" href="{% url 'my-rides' user.username %}">My rides</a>
+                        </li>
+                        <li>
                             <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                         </li>
                         </ul>

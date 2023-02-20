@@ -1,4 +1,4 @@
-{% extends 'carpool/base.html' %}
+{% extends 'carpool/base.html' %} 
 
 {% block title%}
     <title> Rides Available </title>
@@ -72,11 +72,21 @@
                         </a>
                     </div>
                     <div>
-                        <a href="{% url 'ride-signup' ride.id %}">
+
+
+                    {% if ride.driver == user %}
+                        <a href="{% url 'ride-update' ride.id %}">
                             <button type="button" class="btn btn-primary">
-                              Contact Driver
+                            Edit Ride
                             </button>
                         </a>
+                    {% elif ride.driver != user %}
+                        <a href="{% url 'ride-signup' ride.id %}">
+                            <button type="button" class="btn btn-primary">
+                            Contact Driver
+                            </button>
+                        </a>
+                    {% endif %}
                           
 
                         
