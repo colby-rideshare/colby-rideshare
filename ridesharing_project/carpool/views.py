@@ -24,30 +24,35 @@ class RideListView(LoginRequiredMixin, ListView):
     paginate_by = 5
     
     def get_context_data(self, **kwargs):
-        print('Before get gas price')
         self.get_gas_price()
-        print('After get gas price')
         context = super().get_context_data(**kwargs)
         for ride in context['rides']:
             ride.spots_left = ride.capacity - ride.num_riders
             ride.origin_code = ride.origin
             ride.dst_code = ride.destination
-            # the code below might be useful to change the styling based on if ride is full or not
-            
-            # if ride.spots_left <= 0:
-            #     ride.is_full = True
-            # else:
-            #     ride.is_full = False
         return context
+    
+    #this code gets context for rides with capacity left
+    # def get_context_data(self, **kwargs):
+    #     self.get_gas_price()
+    #     context = super().get_context_data(**kwargs)
+    #     rides_with_spots_left = []
+    #     for ride in context['rides']:
+    #         ride.spots_left = ride.capacity - ride.num_riders
+    #         if ride.spots_left > 0:
+    #             ride.origin_code = ride.origin
+    #             ride.dst_code = ride.destination
+    #             rides_with_spots_left.append(ride)
+    #     context['rides'] = rides_with_spots_left
+    #     return context
+
     
     #fetch gas price if current data is over one week old
     #django does not call custom methods, so need to call it in
     #an overwritten method like get_context_data
     def get_gas_price(self):
         gas_model = GasPrice.objects.first()
-        print(f'Gas model: {gas_model}')
         current_time = timezone.now()
-        print(f'Current time: {current_time}')
         if current_time > gas_model.next_update:
             
             #make api call and get gas prices in Portland, ME
@@ -63,13 +68,12 @@ class RideListView(LoginRequiredMixin, ListView):
             data_string = data.decode("utf-8")  #decode to utf8
             data_dict = json.loads(data_string)  #load as dict
             portland_gas_price = data_dict["result"]["cities"][2]["gasoline"]  #get gasoline price in Portland, ME
-            portland_gas_price = float(portland_gas_price)  #cast as float
+            portland_gas_price = float(portland_gas_price)
             
             #update GasPrice model
             gas_model.last_update = current_time
             gas_model.next_update = current_time + timedelta(weeks=1)
             gas_model.gas_price = portland_gas_price
-            print(f'Gas Price: {portland_gas_price}')
             gas_model.save()
     
 class UserRideListView(LoginRequiredMixin, ListView):

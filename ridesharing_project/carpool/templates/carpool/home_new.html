@@ -1,0 +1,130 @@
+{% extends 'carpool/base.html' %}
+
+{% block title%}
+    <title> Rides Available </title>
+{% endblock title %}
+
+{% block content %}
+
+<div class='container-fluid'>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="text-center col-4" scope="col">Route</th>
+                            <th class="text-center col-2" scope="col">Driver</th>
+                            <th class="text-center col-2" scope="col">Date</th>
+                            <th class="text-center col-2" scope="col">Seats available</th>
+                            <th class="text-center col-2" scope="col">Sign up</th>
+                        </tr>
+                    </thead>
+
+                    {% for ride in rides %}
+                    <tbody>
+                        <tr class="inner-box">
+                            <td class="text-center">
+                                <div class="ratio ratio-1x1">
+                                    <iframe
+                                        width="100"
+                                        height="100"
+                                        frameborder="0" style="border:0"
+                                        referrerpolicy="no-referrer-when-downgrade"
+                                        src="https://www.google.com/maps/embed/v1/directions?key=AIzaSyDnf3ImYPmQDgbh_kSg32Im7i8d1NIEZac&origin={{ride.origin_code}}&destination={{ride.dst_code}}">
+                                    </iframe>
+                                </div>                            
+                            </td>
+                            <td class="text-center">
+                                <a href="{% url 'user-rides' ride.driver.username %}">
+                                <div class="text-above-image">
+                                    {{ ride.driver.first_name }} {{ ride.driver.last_name }}
+                                </div>
+                                <div class="event-img">
+                                    <img class="rounded-circle article-img" src="{{ ride.driver.profile.image.url }}"/>
+                                </div>
+                                </a>
+                            </td>                  
+                            <th scope="row">
+                                <div class="event-date">
+                                    <span>{{ ride.departure_day|date:'d' }}</span>
+                                    <p>{{ ride.departure_day|date:'F' }}</p>
+                                    <h3>{{ride.time}}</h3>
+                                </div>
+                            </th>
+                            <th scope="row">
+                                <div class="event-date">
+                                    <span>{{ ride.spots_left }}</span>
+                                </div>
+                            </th>
+                            <td class="text-center">
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#Modal{{ride.id}}">
+                                    Ride details
+                                </button>
+            
+                                <!-- Modal -->
+                                <div class="modal fade" id="Modal{{ride.id}}" tabindex="-1" aria-labelledby="Modal{{ride.id}}Label" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h5 class="modal-title" id="Modal{{ride.id}}Label">Ride details</h5>
+                                        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h5>Notes from driver:</h5>
+                                            {{ ride.notes }}
+                                        </div>
+                                        <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+                                        {% if ride.driver != user %}
+                                            <button
+                                                type="button" class="btn btn-primary" onclick="location.href='{% url 'ride-signup' ride.id %}'">Sign up
+                                            </button>
+                                        {% else %} 
+                                            <button
+                                                type="button" class="btn btn-primary" onclick="location.href='{% url 'ride-update' ride.id %}'">Edit ride
+                                            </button>
+                                        {% endif %}
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- pagination -->
+{% if is_paginated %}
+{% if page_obj.has_previous %}
+    <a class="btn btn-outline-info mb-4 mx-1" href="?page=1">First</a>
+    <a class="btn btn-outline-info mb-4 mx-1" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+{% endif %}
+{% for num in page_obj.paginator.page_range %}
+    {% if page_obj.number == num %}
+        <a class="btn btn-info mb-4 mx-1" href="?page={{ num }}">{{ num }}</a>
+    {% elif num > page_obj.number|add:'-2' and num < page_obj.number|add:'2' %}
+        <a class="btn btn-outline-info mb-4 mx-1" href="?page={{ num }}">{{ num }}</a>
+    {% endif %}
+{% endfor %}
+{% if page_obj.has_next %}
+    <a class="btn btn-outline-info mb-4 mx-1" href="?page={{ page_obj.next_page_number }}">Next</a>
+    <a class="btn btn-outline-info mb-4 mx-1" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+{% endif %}
+{% endif %}
+<!-- end pagination -->
+
+    <script type="text/javascript">    
+    </script>
+   <!--  <script async
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnf3ImYPmQDgbh_kSg32Im7i8d1NIEZac&callback=initMap&v=weekly"
+    ></script>  --> 
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+{% endblock content %}

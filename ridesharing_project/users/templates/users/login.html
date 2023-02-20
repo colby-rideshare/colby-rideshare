@@ -6,7 +6,8 @@
 {% endblock title %}
 
 {% block content %}
-    <div class="content-section"> <!-- class names here are used for styling -->
+<div class="row d-flex align-items-center">
+    <div class="col-md-4 mx-auto mt-4 text-center border border-secondary rounded">
         <form method="POST">
             {% csrf_token %} <!-- django security features -->
             <fieldset class="form-group"> <!-- fieldset creates box around content -->
@@ -14,16 +15,17 @@
                 {{ form|crispy }} <!-- |crispy applies crispy forms styling to form -->
             </fieldset>
             <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Log In</button>
-                <small class="text-muted ml-2">
-                    <a href="{% url 'password_reset' %}">Forgot password?</a>
+                <button class="btn btn-primary mt-3" type="submit">Log In</button>
+                <small class="text-muted mt-3">
+                    <a style="margin-left: 10px;"href="{% url 'password_reset' %}">Forgot password?</a>
                 </small>
             </div>
         </form>
         <div class="border-top pt-3">
             <small class="text-muted">
-                Need an account?<a class="ml-2" href="{% url 'register' %}">Sign up here</a>
+                Need an account?<a style="margin-left: 10px;" href="{% url 'register' %}">Sign up here</a>
             </small>
         </div>
     </div>
+</div>
 {% endblock content %} 
