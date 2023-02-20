@@ -26,15 +26,26 @@ class RideListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         self.get_gas_price()
         context = super().get_context_data(**kwargs)
-        rides_with_spots_left = []
         for ride in context['rides']:
             ride.spots_left = ride.capacity - ride.num_riders
-            if ride.spots_left > 0:
-                ride.origin_code = ride.origin
-                ride.dst_code = ride.destination
-                rides_with_spots_left.append(ride)
-        context['rides'] = rides_with_spots_left
+            ride.origin_code = ride.origin
+            ride.dst_code = ride.destination
         return context
+    
+    #this code gets context for rides with capacity left
+    # def get_context_data(self, **kwargs):
+    #     self.get_gas_price()
+    #     context = super().get_context_data(**kwargs)
+    #     rides_with_spots_left = []
+    #     for ride in context['rides']:
+    #         ride.spots_left = ride.capacity - ride.num_riders
+    #         if ride.spots_left > 0:
+    #             ride.origin_code = ride.origin
+    #             ride.dst_code = ride.destination
+    #             rides_with_spots_left.append(ride)
+    #     context['rides'] = rides_with_spots_left
+    #     return context
+
     
     #fetch gas price if current data is over one week old
     #django does not call custom methods, so need to call it in
