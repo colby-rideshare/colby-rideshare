@@ -109,9 +109,14 @@ class RideCreateView(LoginRequiredMixin, CreateView):
     success_url = '/'
     
     def form_valid(self, form):
-        form.instance.driver = self.request.user #set driver to current logged in user
+        form.instance.driver = self.request.user
         form.instance.num_riders = 0
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        messages.success(self.request, self.get_success_message())
+        return response
+
+    def get_success_message(self):
+        return 'Your ride has been created successfully'
     
 class RideUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Ride
@@ -125,6 +130,11 @@ class RideUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         if self.request.user == ride.driver:
             return True
         return False
+    
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'Your ride has been updated successfully')
+        return response
     
 class RideSignUpView(LoginRequiredMixin, UpdateView):
     model = Ride
@@ -166,3 +176,8 @@ class RideDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         if self.request.user == ride.driver:
             return True
         return False
+    
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.warning(self.request, 'Your ride has been deleted')
+        return response
