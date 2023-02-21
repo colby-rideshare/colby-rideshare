@@ -1,7 +1,12 @@
 import googlemaps
+from dotenv import load_dotenv
+import os 
+load_dotenv()
 
+GOOGLE_API = os.environ.get('GOOGLE_API')
+GAS_API = os.environ.get('GAS_API') 
 
-gmaps = googlemaps.Client(key='AIzaSyDnf3ImYPmQDgbh_kSg32Im7i8d1NIEZac')
+gmaps = googlemaps.Client(key= GOOGLE_API)
 
 
 

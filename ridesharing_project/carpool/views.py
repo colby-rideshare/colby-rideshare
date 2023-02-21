@@ -8,6 +8,7 @@ from .models import Ride, GasPrice
 from .forms import RideSignUpForm, RideCreateForm, RideUpdateForm
 import os
 from . import gmaps
+from . import GAS_API, GOOGLE_API
 from datetime import timedelta
 from django.utils import timezone
 import http.client
@@ -25,8 +26,8 @@ class RideListView(LoginRequiredMixin, ListView):
     ordering = ['departure_day']  #this is way to change ordering -- eventually need to change to prioritize best ride matches
     paginate_by = 5
     
-    def get_queryset(self):
-        return Ride.objects.filter(~Q(driver=self.request.user))
+    # def get_queryset(self):
+    #     return Ride.objects.filter(~Q(driver=self.request.user)) #TODO: I commented this out because it crashes if # of rides is less than 5
     
     def get_context_data(self, **kwargs):
         self.get_gas_price()
@@ -35,6 +36,7 @@ class RideListView(LoginRequiredMixin, ListView):
             ride.spots_left = ride.capacity - ride.num_riders
             ride.origin_code = ride.origin
             ride.dst_code = ride.destination
+            ride.GOOGLE_API = GOOGLE_API
         return context
     
 
@@ -52,7 +54,7 @@ class RideListView(LoginRequiredMixin, ListView):
             connection = http.client.HTTPSConnection("api.collectapi.com")
             headers = {
                 'content-type': "application/json",
-                'authorization': "apikey 3rsMU4US801zfhAZt9Kauk:6HSs8KPnwAOqNKhLpVGf7P"
+                'authorization': "apikey " + GAS_API
                 }
             connection.request("GET", "/gasPrice/stateUsaPrice?state=ME", headers=headers)
             response = connection.getresponse()
@@ -107,13 +109,18 @@ class RideCreateView(LoginRequiredMixin, CreateView):
     form_class = RideCreateForm
     # fields = ['origin','destination','departure_time','notes','capacity']
     success_url = '/'
-    
     def form_valid(self, form):
         form.instance.driver = self.request.user
         form.instance.num_riders = 0
         response = super().form_valid(form)
         messages.success(self.request, self.get_success_message())
         return response
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['GOOGLE_API'] = GOOGLE_API
+
+        return context
 
     def get_success_message(self):
         return 'Your ride has been created successfully'
