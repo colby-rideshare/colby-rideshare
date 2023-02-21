@@ -13,7 +13,7 @@
                 <h2>Are you sure you want to delete ride from {{ride.origin}} to {{ride.destination}}?</h2>
             </fieldset>
             <div class="form-group">
-                <a class="btn btn-outline-secondary" href="{% url 'ride-detail' object.id %}">No, don't delete</a>
+                <a class="btn btn-outline-secondary" href="{% url 'my-rides' user.username %}">No, don't delete</a>
                 <button class="btn btn-outline-danger" type="submit">Yes, delete</button>
             </div>
         </form>
