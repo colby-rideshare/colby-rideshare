@@ -72,7 +72,17 @@
                         </div>
                 </fieldset>
                 <div class="form-group">
-                    <button class="btn btn-primary mb-3" type="submit">Post</button>
+                    <a href="{% url 'my-rides' ride.driver.username %}">
+                        <button type="button" class="btn btn-secondary mb-3">
+                        Go Back
+                        </button>
+                    </a>
+                    <a href="{% url 'ride-delete' ride.id %}">
+                        <button type="button" class="btn btn-danger mb-3">
+                        Delete Ride
+                        </button>
+                    </a>
+                    <button class="btn btn-primary mb-3" type="submit">Update Ride</button>
                 </div>
             </form>
         </div>

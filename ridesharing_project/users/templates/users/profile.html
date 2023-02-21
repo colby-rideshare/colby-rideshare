@@ -1,52 +1,31 @@
 {% extends 'carpool/base.html' %}
-<!--{% load crispy_forms_tags %}-->
+{% load crispy_forms_tags %}
 
 {% block title%}
     <title> Profile view </title>
 {% endblock title %}
 
 {% block content %}
-
-<div class="row">
-    <div class="col-md-6 mx-auto">
-        <div class="content-section">
-            <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %} 
-                <div class="panel panel-default mt-2 mb-2">
-                    <div class="panel-body text-center">
-                        <img src="{{ user.profile.image.url }}" class="rounded-circle" height="200"
-                            alt="Profile picture" loading="lazy" />
-                        <p class="text-center">
-                            <a href="#" class="btn btn-link btn-sm">Edit picture</a>
-                        </p>
-                    </div>
-                </div>
-                <div class="row mb-4">
-                <div class="col">
-                    <div class="form-outline">
-                    <input type="text" id="form6Example1" class="form-control" />
-                    <label class="form-label" for="form6Example1">First name</label>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="form-outline">
-                    <input type="text" id="form6Example2" class="form-control" />
-                    <label class="form-label" for="form6Example2">Last name</label>
-                    </div>
-                </div>
-                </div>
-                <div class="form-outline mb-4">
-                <input type="text" id="form6Example3" class="form-control" />
-                <label class="form-label" for="form6Example3">Username</label>
-                </div>
-                <div class="form-outline mb-4">
-                <input type="email" id="form6Example5" class="form-control" />
-                <label class="form-label" for="form6Example5">Email</label>
-                </div>
-                <button type="submit" class="btn btn-primary btn-block mb-2">Save changes</button>
-            </form>
+<div class="row d-flex align-items-center">
+    <div class="col-md-4 mx-auto mt-4 text-center border border-secondary rounded">
+        <div class="media">
+        <img class="rounded-circle account-img" src={{ user.profile.image.url }}>
+        <div class="media-body">
+            <h2 class="account-heading">{{ user.username }}</h2>
+            <p class="text-secondary">{{ user.email }}</p>
         </div>
+        </div>
+        <form method="POST" enctype="multipart/form-data"> <!-- need the enctype to save image properly -->
+            {% csrf_token %} <!-- django security features -->
+            <fieldset class="form-group"> <!-- fieldset creates box around content -->
+                <legend class="border-bottom mb-4">Profile info</legend>
+                {{ u_form|crispy }} <!-- |crispy applies crispy forms styling to form -->
+                {{ p_form|crispy }}
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-primary mt-3 mb-3" type="submit">Update</button>
+            </div>
+        </form>
     </div>
 </div>
-
 {% endblock content %}  

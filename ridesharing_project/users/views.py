@@ -1,7 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import DetailView
+from .models import Profile
+from django.contrib.auth.models import User
 
 def register(request):
     if request.method == 'POST':
@@ -35,3 +39,13 @@ def profile(request):
     }
     
     return render(request, 'users/profile.html', context)
+
+class PublicProfileView(LoginRequiredMixin, DetailView):
+    model = Profile
+    template_name = 'users/public_profile.html'
+    context_object_name = 'profile'
+    
+    def get_object(self):
+        user = get_object_or_404(User, username=self.kwargs['username'])
+        profile = get_object_or_404(Profile, user=user)
+        return profile

@@ -1,0 +1,24 @@
+{% extends 'carpool/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title%}
+    <title>{{profile}}</title>
+{% endblock title %}
+
+{% block content %}
+<div class="row d-flex align-items-center">
+    <div class="col-md-4 mx-auto mt-4 text-center border border-secondary rounded">
+    <div class="media">
+    <img class="rounded-circle account-img mt-3" src={{ object.image.url }}>
+    <div class="media-body">
+        <h2 class="account-heading">{{ object.user.first_name }} {{ object.user.last_name }}</h2>
+        <!--<p class="text-secondary">{{ object.user.email }}</p>-->
+    </div>
+    </div>
+    <div class="form-group">
+        <a class="btn btn-secondary mb-3" href="{% url 'carpool-home' %}">Back</a>
+        <!--<a class="btn btn-primary mb-3" href="#">Message {{object.user.first_name}}</a>-->
+    </div>
+</div>
+</div>
+{% endblock content %}  

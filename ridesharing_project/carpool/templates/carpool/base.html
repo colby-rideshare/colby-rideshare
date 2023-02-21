@@ -25,6 +25,7 @@
     />
     <!-- CSS -->
     <link rel='stylesheet' type='text/css' href="{% static 'carpool/main.css' %}">
+
     
     {% block title %}{% endblock title %}
 
@@ -81,6 +82,9 @@
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
                         <li>
                             <a class="dropdown-item" href="{% url 'profile' %}">My profile</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'my-rides' user.username %}">My rides</a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>

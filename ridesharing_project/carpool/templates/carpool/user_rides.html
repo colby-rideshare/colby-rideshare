@@ -1,42 +1,435 @@
 {% extends 'carpool/base.html' %}
 
 {% block title%}
-    <title> {{view.kwargs.username}}'s Rides </title>
+    <title> {{first_name}} {{last_name}}'s Rides </title>
 {% endblock title %}
 
 {% block content %}
-    <h1 class="mb-3">Rides by {{view.kwargs.username}}</h1>
+    <div class="event-schedule-area-two bg-color pad100">
+        <div class="container">
+        <div class="row">
+        <div class="col-lg-12">
+        <div class="section-title text-center">
+        <div class="title-text">
+            <h2 class="mb-3">{{first_name}} {{last_name}}'s Rides</h2>
+        </div>
+        </div>
+        </div>
+        
+        </div>
+        
+        <div class="row">
+        <div class="col-lg-12">
+    
+        <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade active show" id="home" role="tabpanel">
+        <div class="table-responsive">
+        <table class="table">
+        <thead>
+        <tr>
+        <th class="text-center col-4" scope="col">Route</th>
+        <th class="text-center col-4" scope="col">Date & Time</th>
+        <th class="text-center col-4" scope="col">Driver</th>
+    
+    
+    
+        <!--<th class="text-center col-2" scope="col">Driver</th>
+        <th class="text-center col-2" scope="col">Date</th>
+        <th class="text-center col-2" scope="col">Seats available</th>
+        <th class="text-center col-2" scope="col">Sign up</th>-->
+        </tr>
+        </thead>
+
     {% for ride in rides %}
-        <article class="media content-section">
-            <img class="rounded-circle article-img" src="{{ ride.driver.profile.image.url }}">
-            <div class="media-body">
-                <div class="article-metadata">
-                    <a class="mr-2" href="{% url 'user-rides' ride.driver.username %}">{{ ride.driver }}</a>
-                    <small class="text-muted">On {{ ride.departure_day|date:'F d' }}<!-- at {{ ride.departure_time|date:'P' }}--></small>
-                </div>
-                <h2><a class="article-title" href="{% url 'ride-detail' ride.id %}">From {{ ride.origin }} to {{ ride.destination }}</a></h2>
-                <p class="article-content">Spots left: {{ ride.spots_left }}/{{ ride.capacity }}</p>
-                <p class="article-content">Notes: {{ ride.notes }}</p>
-            </div>
-        </article>
+        <tbody>
+            <tr class="inner-box">
+                <td class="text-center">
+                    <div class="ratio ratio-1x1">
+                        <iframe
+                            width="450"
+                            height="250"
+                            frameborder="0" style="border:0"
+                            referrerpolicy="no-referrer-when-downgrade"
+                            src="https://www.google.com/maps/embed/v1/directions?key=AIzaSyDnf3ImYPmQDgbh_kSg32Im7i8d1NIEZac&origin={{ride.origin_code}}&destination={{ride.dst_code}}">
+                        </iframe>
+                    </div>                            
+                </td>
+                <td class="text-center">
+                    <h1>{{ ride.departure_day|date:'F' }} {{ ride.departure_day|date:'d'}}</h1>
+                    <br><h3>{{ride.time}}</h3>
+                </td>
+                <td class="text-center">
+                    <div class="text-above-image">
+                        {{ ride.driver.first_name }} {{ ride.driver.last_name }}
+                    </div>
+                    <div class="event-img">
+                        <a href="{% url 'user-rides' ride.driver.username %}">
+                        <img class="rounded-circle article-img mb-4" src="{{ ride.driver.profile.image.url }}"/>
+                        </a>
+                    </div>
+                    <div>
+
+
+                    {% if ride.driver == user %}
+                        <a href="{% url 'ride-update' ride.id %}">
+                            <button type="button" class="btn btn-primary">
+                            Edit Ride
+                            </button>
+                        </a>
+                    {% elif ride.driver != user %}
+                        <a href="{% url 'ride-signup' ride.id %}">
+                            <button type="button" class="btn btn-primary">
+                            Contact Driver
+                            </button>
+                        </a>
+                    {% endif %}
+                          
+
+                        
+                        <!--button with modal, this was working
+                        <button type="button" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#Modal{{ride.id}}">
+                            Contact Driver
+                        </button>
+    
+                        <div class="modal fade" id="Modal{{ride.id}}" tabindex="-1" aria-labelledby="Modal{{ride.id}}Label" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h3 class="modal-title text-center" id="Modal{{ride.id}}Label">Contact {{ ride.driver.first_name }}</h3>
+                                <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    {% if ride.notes|length > 0 %}
+                                        <h5>Notes from driver:</h5>
+                                        <p>{{ ride.notes }}</p>
+                                    {% endif %}            
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+                                {% if ride.driver != user %}
+                                    <button
+                                        type="button" class="btn btn-primary" onclick="location.href='{% url 'ride-signup' ride.id %}'">Sign up
+                                    </button>
+                                {% else %} 
+                                    <button
+                                        type="button" class="btn btn-primary" onclick="location.href='{% url 'ride-update' ride.id %}'">Edit ride
+                                    </button>
+                                {% endif %}
+                                </div>
+                            </div>
+                            </div>
+                        </div> -->
+
+
+                    </div>
+                </td>    
+                
+                
+                <!-- <td class="text-center">
+                    <button type="button" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#Modal{{ride.id}}">
+                        Ride details
+                    </button>
+
+                    <div class="modal fade" id="Modal{{ride.id}}" tabindex="-1" aria-labelledby="Modal{{ride.id}}Label" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="Modal{{ride.id}}Label">Ride details</h5>
+                            <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h5>Notes from driver:</h5>
+                                {{ ride.notes }}
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+                            {% if ride.driver != user %}
+                                <button
+                                    type="button" class="btn btn-primary" onclick="location.href='{% url 'ride-signup' ride.id %}'">Sign up
+                                </button>
+                            {% else %} 
+                                <button
+                                    type="button" class="btn btn-primary" onclick="location.href='{% url 'ride-update' ride.id %}'">Edit ride
+                                </button>
+                            {% endif %}
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </td> -->
+            </tr>
+        </tbody>
     {% endfor %}
 
+<!-- pagination -->
     {% if is_paginated %}
-        {% if page_obj.has_previous %}
-            <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
-            <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-        {% endif %}
-        {% for num in page_obj.paginator.page_range %}
-            {% if page_obj.number == num %}
-                <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
-            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
-            {% endif %}
-        {% endfor %}
-        {% if page_obj.has_next %}
-            <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
-            <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
-        {% endif %}
+    {% if page_obj.has_previous %}
+        <a class="btn btn-outline-secondary mb-4 mx-1" href="?page=1">First</a>
+        <a class="btn btn-outline-secondary mb-4 mx-1" href="?page={{ page_obj.previous_page_number }}">Previous</a>
     {% endif %}
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <a class="btn btn-secondary mb-4 mx-1" href="?page={{ num }}">{{ num }}</a>
+        {% elif num > page_obj.number|add:'-2' and num < page_obj.number|add:'2' %}
+            <a class="btn btn-outline-secondary mb-4 mx-1" href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+        <a class="btn btn-outline-secondary mb-4 mx-1" href="?page={{ page_obj.next_page_number }}">Next</a>
+        <a class="btn btn-outline-secondary mb-4 mx-1" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+    {% endif %}
+    {% endif %}
+<!-- end pagination -->
 
+
+
+    <style type="text/css">
+    .event-schedule-area .section-title .title-text {
+        margin-bottom: 50px;
+    }
+    
+    .event-schedule-area .tab-area .nav-tabs {
+        border-bottom: inherit;
+    }
+    
+    .event-schedule-area .tab-area .nav {
+        border-bottom: inherit;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        margin-top: 80px;
+    }
+    
+    .event-schedule-area .tab-area .nav-item {
+        margin-bottom: 75px;
+    }
+    .event-schedule-area .tab-area .nav-item .nav-link {
+        text-align: center;
+        font-size: 22px;
+        color: #333;
+        font-weight: 600;
+        border-radius: inherit;
+        border: inherit;
+        padding: 0px;
+        text-transform: capitalize !important;
+    }
+    .event-schedule-area .tab-area .nav-item .nav-link.active {
+        color: #4125dd;
+        background-color: transparent;
+    }
+    
+    .event-schedule-area .tab-area .tab-content .table {
+        margin-bottom: 0;
+        width: 80%;
+    }
+    .event-schedule-area .tab-area .tab-content .table thead td,
+    .event-schedule-area .tab-area .tab-content .table thead th {
+        border-bottom-width: 1px;
+        font-size: 20px;
+        font-weight: 600;
+        color: #252525;
+    }
+    .event-schedule-area .tab-area .tab-content .table td,
+    .event-schedule-area .tab-area .tab-content .table th {
+        border: 1px solid #b7b7b7;
+        padding-left: 30px;
+    }
+    .event-schedule-area .tab-area .tab-content .table tbody th .heading,
+    .event-schedule-area .tab-area .tab-content .table tbody td .heading {
+        font-size: 16px;
+        text-transform: capitalize;
+        margin-bottom: 16px;
+        font-weight: 500;
+        color: #252525;
+        margin-bottom: 6px;
+    }
+    .event-schedule-area .tab-area .tab-content .table tbody th span,
+    .event-schedule-area .tab-area .tab-content .table tbody td span {
+        color: #4125dd;
+        font-size: 18px;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+        display: block;
+    }
+    .event-schedule-area .tab-area .tab-content .table tbody th span.date,
+    .event-schedule-area .tab-area .tab-content .table tbody td span.date {
+        color: #656565;
+        font-size: 14px;
+        font-weight: 500;
+        margin-top: 15px;
+    }
+    .event-schedule-area .tab-area .tab-content .table tbody th p {
+        font-size: 14px;
+        margin: 0;
+        font-weight: normal;
+    }
+    
+    .event-schedule-area-two .section-title .title-text h2 {
+        margin: 0px 0 15px;
+    }
+    
+    .event-schedule-area-two ul.custom-tab {
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+        border-bottom: 1px solid #dee2e6;
+        margin-bottom: 30px;
+    }
+    .event-schedule-area-two ul.custom-tab li {
+        margin-right: 70px;
+        position: relative;
+    }
+    .event-schedule-area-two ul.custom-tab li a {
+        color: #252525;
+        font-size: 25px;
+        line-height: 25px;
+        font-weight: 600;
+        text-transform: capitalize;
+        padding: 35px 0;
+        position: relative;
+    }
+    .event-schedule-area-two ul.custom-tab li a:hover:before {
+        width: 100%;
+    }
+    .event-schedule-area-two ul.custom-tab li a:before {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        content: "";
+        background: #4125dd;
+        width: 0;
+        height: 2px;
+        -webkit-transition: all 0.4s;
+        -o-transition: all 0.4s;
+        transition: all 0.4s;
+    }
+    .event-schedule-area-two ul.custom-tab li a.active {
+        color: #4125dd;
+    }
+    
+    .event-schedule-area-two .primary-btn {
+        margin-top: 40px;
+    }
+    
+    .event-schedule-area-two .tab-content .table {
+        -webkit-box-shadow: 0 1px 30px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 1px 30px rgba(0, 0, 0, 0.1);
+        margin-bottom: 0;
+    }
+    .event-schedule-area-two .tab-content .table thead {
+        background-color: #0d6efd;
+        color: #fff;
+        font-size: 20px;
+    }
+    .event-schedule-area-two .tab-content .table thead tr th {
+        padding: 20px;
+        border: 0;
+    }
+    .event-schedule-area-two .tab-content .table tbody {
+        background: #fff;
+    }
+    .event-schedule-area-two .tab-content .table tbody tr.inner-box {
+        border-bottom: 1px solid #dee2e6;
+    }
+    .event-schedule-area-two .tab-content .table tbody tr th {
+        border: 0;
+        padding: 30px 20px;
+        vertical-align: middle;
+    }
+    .event-schedule-area-two .tab-content .table tbody tr th .event-date {
+        color: #252525;
+        text-align: center;
+    }
+    .event-schedule-area-two .tab-content .table tbody tr th .event-date span {
+        font-size: 50px;
+        line-height: 50px;
+        font-weight: normal;
+    }
+    .event-schedule-area-two .tab-content .table tbody tr td {
+        padding: 30px 20px;
+        vertical-align: middle;
+    }
+    .event-schedule-area-two .tab-content .table tbody tr td .r-no span {
+        color: #252525;
+    }
+    .event-schedule-area-two .tab-content .table tbody tr td .event-wrap h3 a {
+        font-size: 20px;
+        line-height: 20px;
+        color: #cf057c;
+        -webkit-transition: all 0.4s;
+        -o-transition: all 0.4s;
+        transition: all 0.4s;
+    }
+    .event-schedule-area-two .tab-content .table tbody tr td .event-wrap h3 a:hover {
+        color: #4125dd;
+    }
+    .event-schedule-area-two .tab-content .table tbody tr td .event-wrap .categories {
+        display: -webkit-inline-box;
+        display: -ms-inline-flexbox;
+        display: inline-flex;
+        margin: 10px 0;
+    }
+    .event-schedule-area-two .tab-content .table tbody tr td .event-wrap .categories a {
+        color: #252525;
+        font-size: 16px;
+        margin-left: 10px;
+        -webkit-transition: all 0.4s;
+        -o-transition: all 0.4s;
+        transition: all 0.4s;
+    }
+    .event-schedule-area-two .tab-content .table tbody tr td .event-wrap .categories a:before {
+        content: "\f07b";
+        font-family: fontawesome;
+        padding-right: 5px;
+    }
+    .event-schedule-area-two .tab-content .table tbody tr td .event-wrap .time span {
+        color: #252525;
+    }
+    .event-schedule-area-two .tab-content .table tbody tr td .event-wrap .organizers {
+        display: -webkit-inline-box;
+        display: -ms-inline-flexbox;
+        display: inline-flex;
+        margin: 10px 0;
+    }
+    .event-schedule-area-two .tab-content .table tbody tr td .event-wrap .organizers a {
+        color: #4125dd;
+        font-size: 16px;
+        -webkit-transition: all 0.4s;
+        -o-transition: all 0.4s;
+        transition: all 0.4s;
+    }
+    .event-schedule-area-two .tab-content .table tbody tr td .event-wrap .organizers a:hover {
+        color: #4125dd;
+    }
+    .event-schedule-area-two .tab-content .table tbody tr td .event-wrap .organizers a:before {
+        content: "\f007";
+        font-family: fontawesome;
+        padding-right: 5px;
+    }
+    .event-schedule-area-two .tab-content .table tbody tr td .primary-btn {
+        margin-top: 0;
+        text-align: center;
+    }
+    .event-schedule-area-two .tab-content .table tbody tr td .event-img img {
+        width: 100px;
+        height: 100px;
+        border-radius: 8px;
+    }
+
+    .event-schedule-area-two {
+        margin-top: 50px;
+      }
+    
+    </style>
+    <script type="text/javascript">    
+    </script>
+   <!--  <script async
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnf3ImYPmQDgbh_kSg32Im7i8d1NIEZac&callback=initMap&v=weekly"
+    ></script>  --> 
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+</div>
 {% endblock content %}
