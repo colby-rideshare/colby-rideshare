@@ -93,6 +93,7 @@ class UserRideListView(LoginRequiredMixin, ListView):
             ride.driver = ride.driver
         return context
     
+#this view is not used right now but could be useful later
 class RideDetailView(LoginRequiredMixin, DetailView):
     model = Ride
     
@@ -125,28 +126,21 @@ class RideUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             return True
         return False
     
-class RideSignUpView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class RideSignUpView(LoginRequiredMixin, UpdateView):
     model = Ride
     form_class = RideSignUpForm  #when fields are specified in the form class, don't need to include them as 'fields' in view
     template_name_suffix = '_signup_form'
     success_url = '/'
-
-    def test_func(self):
-        ride = self.get_object()
-        if self.request.user != ride.driver:
-            if ride.capacity > ride.num_riders:
-                return True
-        return False
     
     def post(self, request, *args, **kwargs):
         ride = self.get_object()
-        ride.num_riders += 1
-        ride.save()
+        # ride.num_riders += 1
+        # ride.save()
+        message = self.request.POST.get('message')
         #email the person who signed up
         send_mail(
             'Ride Signup Confirmation',
-            'You have successfully signed up for a ride',
-            # "{os.environ.get('EMAIL_USER')}",
+            f'You have successfully contacted {ride.driver.first_name} {ride.driver.last_name} about a ride.',
             'max.duchesne@gmail.com',
             [self.request.user.email],
             fail_silently=False,
@@ -154,15 +148,14 @@ class RideSignUpView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         #email the driver
         send_mail(
             'Ride Signup Notification',
-            f'{self.request.user.first_name} {self.request.user.last_name} has signed up for your ride',
-            # "{os.environ.get('EMAIL_USER')}",
+            f'{message}',
             'max.duchesne@gmail.com',
             [ride.driver.email],
             fail_silently=False,
         )   
         
         messages.success(request, 'An email was just sent. Please check your inbox')
-        return redirect('carpool-home')
+        return redirect('landing-page')
     
 class RideDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Ride

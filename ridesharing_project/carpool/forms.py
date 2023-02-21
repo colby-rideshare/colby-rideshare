@@ -1,11 +1,13 @@
 from django import forms
 from .models import Ride
-from bootstrap_datepicker_plus.widgets import DatePickerInput, TimePickerInput
+from bootstrap_datepicker_plus.widgets import DatePickerInput
 
 class RideSignUpForm(forms.ModelForm):
+    message = forms.CharField(widget=forms.Textarea)
+
     class Meta:
         model = Ride
-        fields = ['num_riders']
+        fields = ['message']
 
 class RideCreateForm(forms.ModelForm):
     class Meta:
