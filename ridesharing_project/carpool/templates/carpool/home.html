@@ -2,6 +2,9 @@
 
 {% block title%}
     <title> Rides Available </title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+    {{ form.media }}
 {% endblock title %}
 
 {% block content %}
@@ -15,13 +18,18 @@
     <div class="title-text">
     <h2>Ride Schedule</h2>
     </div>
-    <p>
-    Add a search bar / filter here
-    </p>
     </div>
     </div>
     
     </div>
+
+    <div class="container">
+        <form method="GET">
+          {{ form.as_p }}
+          <button type="submit" name="clear" class="btn btn-secondary mx-1">Clear</button>
+          <button type="submit" name="filter" class="btn btn-primary mx-1">Filter</button>
+        </form>
+        <hr>
     
     <div class="row">
     <div class="col-lg-12">
@@ -164,6 +172,8 @@
             </tr>
         </tbody>
     {% endfor %}
+
+    </div>
 
 <!-- pagination -->
     {% if is_paginated %}

@@ -42,3 +42,10 @@ class RideUpdateForm(forms.ModelForm):
             'notes': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Ex: Need to pick up a friend at Bowdoin', 'required': False}),
             'capacity': forms.NumberInput(attrs={'class': 'form-control'})
         }
+        
+class RideFilterForm(forms.Form):
+    target_date = forms.DateField(required=False, widget=DatePickerInput())
+    
+    class Meta:
+        model = Ride
+        fields = ['departure_day']  #should add time of day here also

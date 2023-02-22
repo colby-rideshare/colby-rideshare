@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Ride, GasPrice
-from .forms import RideSignUpForm, RideCreateForm, RideUpdateForm
+from .forms import RideSignUpForm, RideCreateForm, RideUpdateForm, RideFilterForm
 import os
 from . import gmaps
 from . import GAS_API, GOOGLE_API
@@ -13,7 +13,6 @@ from datetime import timedelta
 from django.utils import timezone
 import http.client
 import json
-from django.db.models import Q
 
 def landing_page(request):
     context = {'user': request.user}
@@ -26,12 +25,18 @@ class RideListView(LoginRequiredMixin, ListView):
     ordering = ['departure_day']  #this is way to change ordering -- eventually need to change to prioritize best ride matches
     paginate_by = 5
     
-    # def get_queryset(self):
-    #     return Ride.objects.filter(~Q(driver=self.request.user)) #TODO: I commented this out because it crashes if # of rides is less than 5
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        target_date = self.request.GET.get('target_date')
+        if target_date:
+            queryset = queryset.filter(departure_day=target_date)
+        queryset = queryset.exclude(driver=self.request.user)
+        return queryset
     
     def get_context_data(self, **kwargs):
-        self.get_gas_price()
+        #self.get_gas_price()
         context = super().get_context_data(**kwargs)
+        context['form'] = RideFilterForm()
         for ride in context['rides']:
             ride.spots_left = ride.capacity - ride.num_riders
             ride.origin_code = ride.origin
