@@ -7,6 +7,7 @@ from django.views.generic import DetailView, FormView
 from .models import Profile
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
+import os
 
 def register(request):
     if request.method == 'POST':
@@ -62,7 +63,7 @@ class SupportView(LoginRequiredMixin, FormView):
             'Support Request',
             message,
             self.request.user.email,
-            ['max.duchesne@gmail.com'],
+            [os.environ.get('EMAIL_USER')],
             fail_silently=False,
         )
         messages.success(self.request, 'Thank you for contacting us. We will get back to you as soon as we can')

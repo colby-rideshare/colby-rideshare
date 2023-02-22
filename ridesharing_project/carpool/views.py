@@ -161,17 +161,17 @@ class RideSignUpView(LoginRequiredMixin, UpdateView):
         message = self.request.POST.get('message')
         #email the person who signed up
         send_mail(
-            'Ride Signup Confirmation',
+            'Ride Inquiry Successful',
             f'You have successfully contacted {ride.driver.first_name} {ride.driver.last_name} about a ride.',
-            'max.duchesne@gmail.com',
+            ride.driver.email,
             [self.request.user.email],
             fail_silently=False,
         )
         #email the driver
         send_mail(
-            'Ride Signup Notification',
+            'Ride Inquiry Notification',
             f'{message}',
-            'max.duchesne@gmail.com',
+            self.request.user.email,
             [ride.driver.email],
             fail_silently=False,
         )   
