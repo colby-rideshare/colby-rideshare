@@ -30,6 +30,8 @@ class RideListView(LoginRequiredMixin, ListView):
         target_date = self.request.GET.get('target_date')
         if target_date:
             queryset = queryset.filter(departure_day=target_date)
+            if not queryset.exists():
+                messages.warning(self.request, 'No rides found for the selected date')
         queryset = queryset.exclude(driver=self.request.user)
         return queryset
     
