@@ -47,5 +47,4 @@ class RideFilterForm(forms.Form):
     target_date = forms.DateField(required=False, widget=DatePickerInput())
     
     class Meta:
-        model = Ride
         fields = ['departure_day']  #should add time of day here also

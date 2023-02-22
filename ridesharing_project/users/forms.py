@@ -41,3 +41,8 @@ class ProfileUpdateForm(forms.ModelForm):
         model = Profile
         fields = ['image']
         
+class SupportForm(forms.Form):
+    message = forms.CharField(widget=forms.Textarea)
+
+    class Meta:
+        fields = ['message']

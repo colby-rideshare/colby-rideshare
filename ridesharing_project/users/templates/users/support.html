@@ -1,0 +1,22 @@
+{% extends 'carpool/base.html' %}
+
+{% block title%}
+    <title>Support</title>
+{% endblock title %}
+
+{% block content %}
+    <div class="row d-flex align-items-center">
+        <div class="col-md-4 mx-auto mt-4 text-center border border-secondary rounded">
+            <form method="POST">
+                {% csrf_token %}
+                <h2 class="mt-3">Contact the support team</h2>
+                <div class="form-group">
+                    <label for="id_message">Message:</label>
+                    <textarea class="form-control" id="id_message" name="message" rows="4"></textarea>
+                </div>
+                <a class="btn btn-secondary mb-3 mt-3" href="{% url 'landing-page' %}">Back</a>
+                <button class="btn btn-primary mb-3 mt-3" type="submit" name="submit">Send</button>
+            </form>
+        </div>
+    </div>
+{% endblock content %} 
