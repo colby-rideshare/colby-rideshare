@@ -9,12 +9,21 @@ def validate_positive(value):
         raise ValidationError(
             ('You must have at least one spot in your car to post a ride')
         )
-
+    
 class Ride(models.Model):
+    MORNING = 'Morning'
+    AFTERNOON = 'Afternoon'
+    EVENING = 'Evening'
+    TIME_CHOICES = (
+        (MORNING, 'Morning'),
+        (AFTERNOON, 'Afternoon'),
+        (EVENING, 'Evening'),
+    )
+
     origin = models.CharField(max_length=100)
     destination = models.CharField(max_length=100)
     departure_day = models.DateField()
-    time = models.CharField(max_length = 100)
+    time = models.CharField(max_length=10, choices=TIME_CHOICES)
     driver = models.ForeignKey(User, on_delete=models.CASCADE)
     notes = models.TextField(blank=True)
     capacity = models.PositiveIntegerField()
