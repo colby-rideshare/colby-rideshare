@@ -8,6 +8,6 @@ urlpatterns = [
     #path('ride/<int:pk>/', RideDetailView.as_view(), name='ride-detail'),
     path('ride/new/', RideCreateView.as_view(), name='ride-create'),
     path('ride/<int:pk>/update/', RideUpdateView.as_view(), name='ride-update'),
-    path('ride/<int:pk>/signup/', RideSignUpView.as_view(), name='ride-signup'),
+    path('ride/<int:ride_pk>/signup/', RideSignUpView.as_view(), name='ride-signup'),
     path('ride/<int:pk>/delete/', RideDeleteView.as_view(), name='ride-delete'),
 ]

@@ -28,13 +28,16 @@ class Ride(models.Model):
     notes = models.TextField(blank=True)
     capacity = models.PositiveIntegerField()
     num_riders = models.IntegerField()
-    #add float field for estimated gas costs (miles / mpg * current gas prices)
-
-    
-    # should create __str__ method to name rides so they aren't "ride object"
     
     def get_absolute_url(self):
         return reverse('ride-detail',kwargs={'pk':self.pk})  #gets url of specific ride detail page
+    
+class RideRequest(models.Model):
+    ride = models.ForeignKey(Ride, on_delete=models.SET_NULL, null=True)
+    passenger = models.ForeignKey(User, on_delete=models.CASCADE)
+    origin = models.CharField(max_length=100)
+    destination = models.CharField(max_length=100)
+    message = models.TextField()
     
 #the purpose of this is to essentially serve as a timer
 #current_time is updated every time a user visits the rides page
