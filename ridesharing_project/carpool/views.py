@@ -1,11 +1,12 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .models import Ride, RideRequest, GasPrice
-from .forms import RideSignUpForm, RideCreateForm, RideUpdateForm, RideFilterForm
+from .forms import RideSignUpForm, RideCreateForm, RideUpdateForm, RideFilterForm, RideRequestForm
 import os
 from . import gmaps
 from . import GAS_API, GOOGLE_API
@@ -102,15 +103,6 @@ class UserRideListView(LoginRequiredMixin, ListView):
             ride.driver = ride.driver
         return context
     
-#this view is not used right now but could be useful later
-class RideDetailView(LoginRequiredMixin, DetailView):
-    model = Ride
-    
-    def get_object(self, queryset=None):
-        ride = super().get_object(queryset)
-        ride.spots_left = ride.capacity - ride.num_riders
-        return ride
-    
 class RideCreateView(LoginRequiredMixin, CreateView):
     model = Ride
     form_class = RideCreateForm
@@ -168,19 +160,26 @@ class RideSignUpView(LoginRequiredMixin, CreateView):
         #send email to driver
         subject = f"{self.request.user.first_name} {self.request.user.last_name} is looking for a ride"
         message = f"Message from {self.request.user.first_name}:\n\n{form.cleaned_data['message']}"
-        from_email = 'max.duchesne@gmail.com'
+        message = f"Message from {self.request.user.first_name}:\n\n{form.cleaned_data['message']}\n\n" \
+                  f"Please visit this link to view the ride request: {self.get_ride_request_url(ride_request)}"
+        from_email = os.environ.get('EMAIL_USER')
         recipient_list = [ride.driver.email]
         send_mail(subject, message, from_email, recipient_list)
         
         #send email to passenger
         subject = f"Your ride request was successful"
         message = f"{ride.driver.first_name} has been contacted. Your ride request is pending approval."
-        from_email = 'max.duchesne@gmail.com'
+        from_email = os.environ.get('EMAIL_USER')
         recipient_list = [self.request.user.email]
         send_mail(subject, message, from_email, recipient_list)
+        
         response = super().form_valid(form)
         messages.success(self.request, 'You have successfully contacted the driver')
         return response
+    
+    def get_ride_request_url(self, ride_request):
+        ride_request_url = reverse('ride-request', args=[ride_request.ride.pk, ride_request.pk])
+        return self.request.build_absolute_uri(ride_request_url)
     
 class RideDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Ride
@@ -196,3 +195,36 @@ class RideDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         response = super().form_valid(form)
         messages.warning(self.request, 'Your ride has been deleted')
         return response
+    
+class RideRequestView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = RideRequest
+    form_class = RideRequestForm
+    template_name = 'carpool/ride_request.html'
+    context_object_name = 'ride_request'
+    success_url = '/'
+    
+    def test_func(self):
+        ride_request = self.get_object()
+        if self.request.user == ride_request.ride.driver:
+            return True
+        return False
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        ride_request = self.get_object()
+        ride = ride_request.ride
+        # ride.origin_code = ride.origin
+        # ride.dst_code = ride.destination
+        # ride_request.waypoint_code = ride_request.destination
+        context['ride'] = ride
+        context['GOOGLE_API'] = GOOGLE_API
+        return context
+    
+    def form_valid(self, form):
+        form.instance.accepted = True
+        response = super().form_valid(form)
+        messages.success(self.request, 'You have accepted the ride')
+        return response
+    
+    def get_object(self, queryset=None):
+        return self.model.objects.get(pk=self.kwargs['pk'])

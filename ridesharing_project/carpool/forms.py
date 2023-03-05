@@ -3,7 +3,6 @@ from .models import Ride, RideRequest
 from bootstrap_datepicker_plus.widgets import DatePickerInput
 
 class RideSignUpForm(forms.ModelForm):
-
     class Meta:
         model = RideRequest
         fields = ['origin', 'destination', 'message']
@@ -12,6 +11,11 @@ class RideSignUpForm(forms.ModelForm):
             'destination': forms.TextInput({'id': 'destination', 'type': 'text'}),
             'message': forms.Textarea(attrs={'class': 'form-control'}),
         }
+        
+class RideRequestForm(forms.ModelForm):
+    class Meta:
+        model = RideRequest
+        fields = ['accepted']
 
 class RideCreateForm(forms.ModelForm):
     class Meta:
