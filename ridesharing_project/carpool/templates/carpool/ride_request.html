@@ -70,11 +70,12 @@
                     </a>
                 </div>
                 <div>
-                    <a href="#">
-                        <button type="button" class="btn btn-primary">
-                        Accept Ride
+                    <form method="POST" action="{% url 'ride-request' ride.pk ride_request.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">
+                            Accept Ride
                         </button>
-                    </a>
+                    </form>                    
                 </div>
             </td>    
         </tr>
