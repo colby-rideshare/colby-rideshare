@@ -1,13 +1,17 @@
 from django import forms
-from .models import Ride
+from .models import Ride, RideRequest
 from bootstrap_datepicker_plus.widgets import DatePickerInput
 
 class RideSignUpForm(forms.ModelForm):
-    message = forms.CharField(widget=forms.Textarea)
 
     class Meta:
-        model = Ride
-        fields = ['message']
+        model = RideRequest
+        fields = ['origin', 'destination', 'message']
+        widgets = {
+            'origin': forms.TextInput({'id': 'origin', 'type': 'text'}),
+            'destination': forms.TextInput({'id': 'destination', 'type': 'text'}),
+            'message': forms.Textarea(attrs={'class': 'form-control'}),
+        }
 
 class RideCreateForm(forms.ModelForm):
     class Meta:
@@ -19,7 +23,8 @@ class RideCreateForm(forms.ModelForm):
             'origin' : forms.TextInput({'id':'origin', 'type': 'text'}),
             'destination' : forms.TextInput({'id':'destination', 'type': 'text'}),
             'notes': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Ex: Need to pick up a friend at Bowdoin', 'required': False}),
-            'capacity': forms.NumberInput(attrs={'class': 'form-control'})
+            'capacity': forms.NumberInput(attrs={'class': 'form-control'}),
+            'time': forms.Select(choices=Ride.TIME_CHOICES, attrs={'class': 'form-control', 'placeholder': ''})
         }
         
     # def save(self, commit=True):
@@ -40,7 +45,8 @@ class RideUpdateForm(forms.ModelForm):
             'origin' : forms.TextInput({'id':'origin', 'type': 'text'}),
             'destination' : forms.TextInput({'id':'destination', 'type': 'text'}),
             'notes': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Ex: Need to pick up a friend at Bowdoin', 'required': False}),
-            'capacity': forms.NumberInput(attrs={'class': 'form-control'})
+            'capacity': forms.NumberInput(attrs={'class': 'form-control'}),
+            'time': forms.Select(choices=Ride.TIME_CHOICES, attrs={'class': 'form-control', 'placeholder': ''})
         }
         
 class RideFilterForm(forms.Form):

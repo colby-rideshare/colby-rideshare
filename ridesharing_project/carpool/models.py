@@ -9,23 +9,35 @@ def validate_positive(value):
         raise ValidationError(
             ('You must have at least one spot in your car to post a ride')
         )
-
+    
 class Ride(models.Model):
+    MORNING = 'Morning'
+    AFTERNOON = 'Afternoon'
+    EVENING = 'Evening'
+    TIME_CHOICES = (
+        (MORNING, 'Morning'),
+        (AFTERNOON, 'Afternoon'),
+        (EVENING, 'Evening'),
+    )
+
     origin = models.CharField(max_length=100)
     destination = models.CharField(max_length=100)
     departure_day = models.DateField()
-    time = models.CharField(max_length = 100)
+    time = models.CharField(max_length=10, choices=TIME_CHOICES)
     driver = models.ForeignKey(User, on_delete=models.CASCADE)
     notes = models.TextField(blank=True)
     capacity = models.PositiveIntegerField()
     num_riders = models.IntegerField()
-    #add float field for estimated gas costs (miles / mpg * current gas prices)
-
-    
-    # should create __str__ method to name rides so they aren't "ride object"
     
     def get_absolute_url(self):
         return reverse('ride-detail',kwargs={'pk':self.pk})  #gets url of specific ride detail page
+    
+class RideRequest(models.Model):
+    ride = models.ForeignKey(Ride, on_delete=models.SET_NULL, null=True)
+    passenger = models.ForeignKey(User, on_delete=models.CASCADE)
+    origin = models.CharField(max_length=100)
+    destination = models.CharField(max_length=100)
+    message = models.TextField()
     
 #the purpose of this is to essentially serve as a timer
 #current_time is updated every time a user visits the rides page

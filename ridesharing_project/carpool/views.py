@@ -4,7 +4,7 @@ from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Ride, GasPrice
+from .models import Ride, RideRequest, GasPrice
 from .forms import RideSignUpForm, RideCreateForm, RideUpdateForm, RideFilterForm
 import os
 from . import gmaps
@@ -120,17 +120,13 @@ class RideCreateView(LoginRequiredMixin, CreateView):
         form.instance.driver = self.request.user
         form.instance.num_riders = 0
         response = super().form_valid(form)
-        messages.success(self.request, self.get_success_message())
+        messages.success(self.request, 'Your ride has been created successfully')
         return response
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['GOOGLE_API'] = GOOGLE_API
-
         return context
-
-    def get_success_message(self):
-        return 'Your ride has been created successfully'
     
 class RideUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Ride
@@ -150,36 +146,41 @@ class RideUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         messages.success(self.request, 'Your ride has been updated successfully')
         return response
     
-class RideSignUpView(LoginRequiredMixin, UpdateView):
-    model = Ride
-    form_class = RideSignUpForm  #when fields are specified in the form class, don't need to include them as 'fields' in view
-    template_name_suffix = '_signup_form'
+class RideSignUpView(LoginRequiredMixin, CreateView):
+    model = RideRequest
+    form_class = RideSignUpForm
+    template_name = 'carpool/ride_signup_form.html'
     success_url = '/'
     
-    def post(self, request, *args, **kwargs):
-        ride = self.get_object()
-        # ride.num_riders += 1
-        # ride.save()
-        message = self.request.POST.get('message')
-        #email the person who signed up
-        send_mail(
-            'Ride Inquiry Successful',
-            f'You have successfully contacted {ride.driver.first_name} {ride.driver.last_name} about a ride.',
-            ride.driver.email,
-            [self.request.user.email],
-            fail_silently=False,
-        )
-        #email the driver
-        send_mail(
-            'Ride Inquiry Notification',
-            f'{message}',
-            self.request.user.email,
-            [ride.driver.email],
-            fail_silently=False,
-        )   
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['ride'] = Ride.objects.get(pk=self.kwargs['ride_pk'])
+        context['GOOGLE_API'] = GOOGLE_API
+        return context
+    
+    def form_valid(self, form):
+        ride_request = form.save(commit=False) #commit = False saves it to memory but not DB, so can still modify before saving to DB
+        ride = Ride.objects.get(pk=self.kwargs['ride_pk'])
+        ride_request.ride = ride
+        ride_request.passenger = self.request.user
+        ride_request.save()
         
-        messages.success(request, 'An email was just sent. Please check your inbox')
-        return redirect('landing-page')
+        #send email to driver
+        subject = f"{self.request.user.first_name} {self.request.user.last_name} is looking for a ride"
+        message = f"Message from {self.request.user.first_name}:\n\n{form.cleaned_data['message']}"
+        from_email = 'max.duchesne@gmail.com'
+        recipient_list = [ride.driver.email]
+        send_mail(subject, message, from_email, recipient_list)
+        
+        #send email to passenger
+        subject = f"Your ride request was successful"
+        message = f"{ride.driver.first_name} has been contacted. Your ride request is pending approval."
+        from_email = 'max.duchesne@gmail.com'
+        recipient_list = [self.request.user.email]
+        send_mail(subject, message, from_email, recipient_list)
+        response = super().form_valid(form)
+        messages.success(self.request, 'You have successfully contacted the driver')
+        return response
     
 class RideDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Ride
