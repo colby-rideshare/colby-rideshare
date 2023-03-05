@@ -28,6 +28,7 @@ class RideListView(LoginRequiredMixin, ListView):
     
     def get_queryset(self):
         queryset = super().get_queryset()
+        queryset = queryset.exclude(departure_day__lt=timezone.now().date())
         target_date = self.request.GET.get('target_date')
         if target_date:
             queryset = queryset.filter(departure_day=target_date)
