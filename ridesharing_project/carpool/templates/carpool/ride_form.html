@@ -2,7 +2,7 @@
 
 {% block title%}
     <title>Post a ride</title>
-    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnf3ImYPmQDgbh_kSg32Im7i8d1NIEZac&libraries=places&callback=initialize" defer></script>
+    <script async src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_API}}&libraries=places&callback=initialize" defer></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 
     <script
@@ -58,12 +58,8 @@
                             <div class="col-md-3">
                                 {{ form.time.errors }}
                                 <label for="{{ form.time.id_for_label }}">Time of departure:</label>
-                                <select name="time" id="time">
-                                    <option>Morning</option>
-                                    <option>Afternoon</option>
-                                    <option>Evening</option>
-                                </select>
-                            </div>
+                                {{ form.time }}
+                            </div>                                                        
                         </div>
                         <div class="fieldWrapper mb-3">
                             {{ form.notes.errors }}

@@ -58,11 +58,7 @@
                             <div class="col-md-3">
                                 {{ form.time.errors }}
                                 <label for="{{ form.time.id_for_label }}">Time of departure:</label>
-                                <select name="time" id="time">
-                                    <option>Morning</option>
-                                    <option>Afternoon</option>
-                                    <option>Evening</option>
-                                </select>
+                                {{ form.time }}
                             </div>
                         </div>
                         <div class="fieldWrapper mb-3">

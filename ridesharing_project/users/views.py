@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
+from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, SupportForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import DetailView
+from django.views.generic import DetailView, FormView
 from .models import Profile
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
+import os
 
 def register(request):
     if request.method == 'POST':
@@ -49,3 +51,20 @@ class PublicProfileView(LoginRequiredMixin, DetailView):
         user = get_object_or_404(User, username=self.kwargs['username'])
         profile = get_object_or_404(Profile, user=user)
         return profile
+    
+class SupportView(LoginRequiredMixin, FormView):
+    form_class = SupportForm
+    template_name = 'users/support.html'
+    success_url = '/'
+    
+    def form_valid(self, form):
+        message = form.cleaned_data['message']
+        send_mail(
+            'Support Request',
+            message,
+            self.request.user.email,
+            [os.environ.get('EMAIL_USER')],
+            fail_silently=False,
+        )
+        messages.success(self.request, 'Thank you for contacting us. We will get back to you as soon as we can')
+        return super().form_valid(form)
