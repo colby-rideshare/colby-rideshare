@@ -159,16 +159,20 @@ class RideSignUpView(LoginRequiredMixin, CreateView):
         ride_request.save()
         
         #send email to driver
-        subject = f"{self.request.user.first_name} {self.request.user.last_name} is looking for a ride"
-        message = f"Message from {self.request.user.first_name}: {form.cleaned_data['message']}\n\n" \
-                  f"Please visit this link to view the ride request: {self.get_ride_request_url(ride_request)}"
+        subject = f"Colby Rideshare -- someone would like a ride from you"
+        message = f"{ride.driver.first_name},\n\n{self.request.user.first_name} {self.request.user.last_name} would like to join you on your upcoming trip.\n\n" \
+            f"Message from {self.request.user.first_name}:\n{form.cleaned_data['message']}\n\n" \
+            f"Please visit this link to view the details of the ride request: {self.get_ride_request_url(ride_request)}" \
+            f"\n\nBest,\nThe Colby Rideshare Team"
         from_email = os.environ.get('EMAIL_USER')
         recipient_list = [ride.driver.email]
         send_mail(subject, message, from_email, recipient_list)
         
         #send email to passenger
-        subject = f"Your ride request was successful"
-        message = f"{ride.driver.first_name} has been contacted. Your ride request is pending approval."
+        subject = f"Colby Rideshare -- your ride request was successful"
+        message = f"{self.request.user.first_name},\n\nYour ride request to {ride_request.destination} on {date_filter(ride.departure_day, 'F d')} was successful. " \
+            f"We have contacted {ride.driver.first_name} {ride.driver.last_name} and will let you know as soon as we hear back from them." \
+            f"\n\nBest,\nThe Colby Rideshare Team"
         from_email = os.environ.get('EMAIL_USER')
         recipient_list = [self.request.user.email]
         send_mail(subject, message, from_email, recipient_list)
@@ -219,6 +223,7 @@ class RideRequestView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return context
     
     def form_valid(self, form):
+        #TODO the ride_request object's accepted value is modified correctly, but it is not saving to the DB
         ride_request = RideRequest.objects.get(pk=self.kwargs['pk'])
         ride_request.accepted = True
         ride_request.save()
@@ -236,7 +241,7 @@ class RideRequestView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         send_mail(subject, message, from_email, recipient_list)
         
         #send email to passenger
-        subject = f"Colby Rideshare -- {ride_request.ride.driver.first_name} {ride_request.ride.driver.last_name} has accepted your ride request"
+        subject = f"Colby Rideshare -- your ride request has been accepted"
         message = f"{ride_request.passenger.first_name},\n\nGreat news -- {ride_request.ride.driver.first_name} {ride_request.ride.driver.last_name} is able to drive you to {ride_request.destination}! " \
             f"Your ride will be leaving in the {ride_request.ride.time} on {date_filter(ride_request.ride.departure_day, 'F d')}. " \
             f"Please be sure to thank {ride_request.ride.driver.first_name} and to offer to chip in on gas costs -- it is more expensive than you think! " \
@@ -249,5 +254,5 @@ class RideRequestView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         send_mail(subject, message, from_email, recipient_list)
         
         response = super().form_valid(form)
-        messages.success(self.request, 'Thank you for helping the Colby community')
+        messages.success(self.request, 'You have successfully accepted the ride request -- thank you for helping the Colby community!')
         return response
