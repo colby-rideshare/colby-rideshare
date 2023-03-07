@@ -29,6 +29,8 @@ class Ride(models.Model):
     capacity = models.PositiveIntegerField()
     num_riders = models.IntegerField()
     
+    #TODO add ride passengers and ride stops
+    
     def get_absolute_url(self):
         return reverse('ride-detail',kwargs={'pk':self.pk})  #gets url of specific ride detail page
     

@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.contrib import messages
 from django.core.mail import send_mail
+from django.template.defaultfilters import date as date_filter
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
@@ -137,6 +138,7 @@ class RideUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         messages.success(self.request, 'Your ride has been updated successfully')
         return response
     
+#this is the view where riders contact the driver to inquire about a ride
 class RideSignUpView(LoginRequiredMixin, CreateView):
     model = RideRequest
     form_class = RideSignUpForm
@@ -194,6 +196,7 @@ class RideDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         messages.warning(self.request, 'Your ride has been deleted')
         return response
     
+#this is the view where drivers accept a rider's ride request
 class RideRequestView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = RideRequest
     form_class = RideRequestForm
@@ -221,20 +224,26 @@ class RideRequestView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         ride_request.save()
         
         #send email to driver
-        subject = f"You have accepted {ride_request.passenger.first_name} {ride_request.passenger.last_name}'s carpool request"
-        message = f"Thank you for helping the Colby community. " \
-          f"Please be mindful of {ride_request.passenger.first_name}'s travel plans -- " \
-          f"let {ride_request.passenger.first_name} know as soon as possible if anything changes."
-
+        subject = f"Colby Rideshare -- ride request accepted"
+        message = f"{ride_request.ride.driver.first_name},\n\nThank you for offering to drive {ride_request.passenger.first_name} {ride_request.passenger.last_name} to {ride_request.destination}! " \
+            f"Your contribution is making a big difference in the Colby community. " \
+            f"{ride_request.passenger.first_name} should be reaching out to you soon to ensure you both are on the same page regarding the logistics of your trip. " \
+            f"Please be mindful of {ride_request.passenger.first_name}'s travel plans and be sure to let {ride_request.passenger.first_name} know as soon as possible if anything changes. " \
+            f"Thank you for using Colby Rideshare and please help other students find rides by encouraging fellow mules to join!" \
+            f"\n\nSafe travels,\nThe Colby Rideshare Team"
         from_email = os.environ.get('EMAIL_USER')
         recipient_list = [ride_request.ride.driver.email]
         send_mail(subject, message, from_email, recipient_list)
         
         #send email to passenger
-        subject = f"{ride_request.ride.driver.first_name} {ride_request.ride.driver.last_name} has accepted your ride request"
-        message = f"{ride_request.ride.driver.first_name} {ride_request.ride.driver.last_name} is able to drive you to {ride_request.destination}. " \
-          f"Please be sure to thank your driver and to offer to chip in on gas costs -- it is more expensive than you think!"
-
+        subject = f"Colby Rideshare -- {ride_request.ride.driver.first_name} {ride_request.ride.driver.last_name} has accepted your ride request"
+        message = f"{ride_request.passenger.first_name},\n\nGreat news -- {ride_request.ride.driver.first_name} {ride_request.ride.driver.last_name} is able to drive you to {ride_request.destination}! " \
+            f"Your ride will be leaving in the {ride_request.ride.time} on {date_filter(ride_request.ride.departure_day, 'F d')}. " \
+            f"Please be sure to thank {ride_request.ride.driver.first_name} and to offer to chip in on gas costs -- it is more expensive than you think! " \
+            f"It would be a good idea for you to reach out to {ride_request.ride.driver.first_name} directly and sort out the logistics of your trip. " \
+            f"{ride_request.ride.driver.first_name} can be reached at {ride_request.ride.driver.email}. " \
+            f"Thank you for using Colby Rideshare and please help other students find rides by encouraging fellow mules to join!" \
+            f"\n\nSafe travels,\nThe Colby Rideshare Team"
         from_email = os.environ.get('EMAIL_USER')
         recipient_list = [ride_request.passenger.email]
         send_mail(subject, message, from_email, recipient_list)
