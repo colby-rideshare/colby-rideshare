@@ -1,61 +1,42 @@
 {% extends 'carpool/base.html' %}
 
 {% block title%}
-    <title> Landing Page </title>
+    <title> Home </title>
 {% endblock title %}
 
 {% block content %}
 
-<!--Main Navigation-->
-
-    <!-- Background image -->
-    <div class="card bg-dark text-white">
-        <img src="https://i0.wp.com/picjumbo.com/wp-content/uploads/evening-traffic-in-the-city-with-star-sky.jpg?w=2210&quality=70"
-            class="card-img" alt="...">
-        <div class="card-img-overlay">
-            
-            <!-- Cards -->
-            <div class="row">
-                <div class="col-sm-6 mb-3 landing-cards">
-                    <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Riders</h5>
-                        <p class="card-text text-black">Reasons for riding: convenient, cheap, drivers are in community</p>
-                        <a href="{% url 'carpool-home' %}" class="btn btn-primary">Find a ride</a>
-                    </div>
-                    </div>
-                </div>
-                <div class="col-sm-6 landing-cards">
-                    <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Drivers</h5>
-                        <p class="card-text text-black">Reasons for driving: good for environment, help the community</p>
-                        <a href="{% url 'ride-create' %}" class="btn btn-primary">Offer to drive</a>
-                    </div>
-                    </div>
-                </div>
-            </div>
-            <!-- End cards -->
-
-        </div>
+<div class="card-group">
+    <div class="card">
+    <img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp" class="card-img-top" alt="Hollywood Sign on The Hill"/>
+    <div class="card-body">
+        <h5 class="card-title text-center">Drivers</h5>
+        <p class="card-text" style="display: block; margin: 25px;">Reasons for driving: good for environment, help the community, riders encouraged to chip in for gas</p>
+        <a href="{% url 'ride-create' %}" class="btn btn-primary" style="display: block; margin: 25px;">
+            Offer to drive
+        </a>
     </div>
-    <!-- End background image -->
-
-
-<!--Main Navigation-->
-
-<!--Main layout-->
-<main>
-    <div class="container">
-
     </div>
-</main>
-<!--Main layout-->
-
-<!--Footer-->
-<footer>
-
-</footer>
-<!--Footer-->
+    <div class="card">
+    <img src="https://mdbcdn.b-cdn.net/img/new/standard/city/042.webp" class="card-img-top" alt="Palm Springs Road"/>
+    <div class="card-body">
+        <h5 class="card-title text-center">Riders</h5>
+        <p class="card-text" style="display: block; margin: 25px;">Reasons for riding: convenient, cheap, get closer with community</p>
+        <a href="{% url 'carpool-home' %}" class="btn btn-primary" style="display: block; margin: 25px;">
+            Find a ride
+        </a>
+    </div>
+    </div>
+    <div class="card">
+    <img src="https://mdbcdn.b-cdn.net/img/new/standard/city/043.webp" class="card-img-top" alt="Los Angeles Skyscrapers"/>
+    <div class="card-body">
+        <h5 class="card-title text-center">About Carpool App</h5>
+        <p class="card-text" style="display: block; margin: 25px;">Created by Colby students for Colby students</p>
+        <a href="{% url 'support-page' %}" class="btn btn-primary" style="display: block; margin: 25px;">
+            Customer Support
+        </a>
+    </div>
+    </div>
+</div>
 
 {% endblock content %}

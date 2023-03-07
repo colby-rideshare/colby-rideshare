@@ -1,42 +1,168 @@
 {% extends 'carpool/base.html' %}
 
 {% block title%}
-    <title> Home </title>
+    <title> Landing Page </title>
 {% endblock title %}
 
 {% block content %}
 
-<div class="card-group">
-    <div class="card">
-    <img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp" class="card-img-top" alt="Hollywood Sign on The Hill"/>
-    <div class="card-body">
-        <h5 class="card-title text-center">Drivers</h5>
-        <p class="card-text" style="display: block; margin: 25px;">Reasons for driving: good for environment, help the community, riders encouraged to chip in for gas</p>
-        <a href="{% url 'ride-create' %}" class="btn btn-primary" style="display: block; margin: 25px;">
-            Offer to drive
-        </a>
-    </div>
-    </div>
-    <div class="card">
-    <img src="https://mdbcdn.b-cdn.net/img/new/standard/city/042.webp" class="card-img-top" alt="Palm Springs Road"/>
-    <div class="card-body">
-        <h5 class="card-title text-center">Riders</h5>
-        <p class="card-text" style="display: block; margin: 25px;">Reasons for riding: convenient, cheap, get closer with community</p>
-        <a href="{% url 'carpool-home' %}" class="btn btn-primary" style="display: block; margin: 25px;">
-            Find a ride
-        </a>
-    </div>
-    </div>
-    <div class="card">
-    <img src="https://mdbcdn.b-cdn.net/img/new/standard/city/043.webp" class="card-img-top" alt="Los Angeles Skyscrapers"/>
-    <div class="card-body">
-        <h5 class="card-title text-center">About Carpool App</h5>
-        <p class="card-text" style="display: block; margin: 25px;">Created by Colby students for Colby students</p>
-        <a href="#" class="btn btn-primary" style="display: block; margin: 25px;">
-            Learn more
-        </a>
-    </div>
-    </div>
-</div>
+{% comment %}
+Landing page
+https://github.com/mdbootstrap/bootstrap-5-jumbotron-template/blob/main/jumbotron-template.html
+{% endcomment %}
 
+<!--Main layout-->
+<main class="my-5">
+  <div class="container">
+    <!--Section: Content-->
+    <section>
+      <!-- Jumbotron -->
+      <div id="intro" class="p-5 text-center bg-light shadow-5 rounded mb-5">
+        <h1 class="mb-3 h2">Colby Carpool App</h1>
+        <p class="mb-3">Together, let's make it easy for members of the Colby community to find rides to and from campus</p>
+        <a class="btn btn-primary m-2" href="#learn-more" role="button" rel="nofollow"
+          target="_blank">Learn More</a>
+      </div>
+      <!-- Jumbotron -->
+    </section>
+    <!--Section: Content-->
+    <br>
+    <!--Section: Content-->
+    <section class="text-center">
+
+      <div class="row">
+        <div class="col-lg-4 col-md-12 mb-4">
+          <div class="card">
+            <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+              <img src="https://mdbootstrap.com/img/new/standard/nature/184.jpg" class="img-fluid" />
+              <a href="#!">
+                <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
+              </a>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">Drivers</h5>
+              <p class="card-text">
+                Post your upcoming trip details and other students can contact you for a ride
+              </p>
+              <a href="{% url 'ride-create' %}" class="btn btn-primary">Offer to drive</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="card">
+            <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+              <img src="https://mdbootstrap.com/img/new/standard/nature/023.jpg" class="img-fluid" />
+              <a href="#!">
+                <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
+              </a>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">Riders</h5>
+              <p class="card-text">
+                See when other students are leaving and find a ride that works best for you
+              </p>
+              <a href="{% url 'carpool-home' %}" class="btn btn-primary">Find a ride</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="card">
+            <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+              <img src="https://mdbootstrap.com/img/new/standard/nature/111.jpg" class="img-fluid" />
+              <a href="#!">
+                <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
+              </a>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">Support</h5>
+              <p class="card-text">
+                Can't find what you're looking for? Have any suggestions? Contact our support team
+              </p>
+              <a href="{% url 'support-page' %}" class="btn btn-primary">Support</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <br><br><br>
+
+    <section>
+      <div class="container">
+      <div id="learn-more" class="row">
+        <div class="col-md-6 gx-5 mb-4">
+          <div class="bg-image hover-overlay ripple shadow-2-strong" data-mdb-ripple-color="light">
+            <img src="https://afa.colby.edu/wp-content/uploads/2022/05/Miller-fall-e1652452364851.png" class="img-fluid" />
+            <a href="#!">
+              <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
+            </a>
+          </div>
+        </div>
+
+        <div class="col-md-6 gx-5 mb-4">
+          <h4><strong>About Us</strong></h4>
+          <p class="text-muted">
+            This website was created by two Colby students who struggled
+            time and time again with finding rides to and from campus.
+            With the amount of students on campus who drive home on breaks
+            or even on weekends, it should be easier to find rides home or
+            to local airports. That's why we built this -- to assist the
+            Colby community in making their travel plans seamless and stress-free.
+          </p>
+          <p><strong>Why should I offer to drive?</strong></p>
+          <ul class="text-muted">
+            <li>It's a kind gesture, and offering to drive someone along your
+              way doesn't take much effort and helps the Colby community</li>
+            <li>Only fellow Colby students are allowed to join, and you might 
+              just become friends with someone new</li>
+            <li>Gas is expensive! You can ask your riders to split gas costs with you</li>
+            <li>Driving long distances has a major carbon footprint and by carpooling
+              you're doing your part to minimize the impact on the planet
+            </li>
+            <li>Ultimately, you're allowed to decline the initial ride request if the ride 
+              is too far out of your way
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    </section>
+    <!--Section: Content-->
+
+<!--Main layout-->
+
+<br><br>
+
+{% comment %} <!--Footer-->
+<footer class="bg-light text-lg-start">
+
+  <hr class="m-0" />
+
+  <div class="text-center py-4 align-items-center">
+    <p>Follow MDB on social media</p>
+    <a href="https://www.youtube.com/channel/UC5CF7mLQZhvx8O5GODZAhdA" class="btn btn-primary m-1" role="button"
+      rel="nofollow" target="_blank">
+      <i class="fab fa-youtube"></i>
+    </a>
+    <a href="https://www.facebook.com/mdbootstrap" class="btn btn-primary m-1" role="button" rel="nofollow"
+      target="_blank">
+      <i class="fab fa-facebook-f"></i>
+    </a>
+    <a href="https://twitter.com/MDBootstrap" class="btn btn-primary m-1" role="button" rel="nofollow"
+      target="_blank">
+      <i class="fab fa-twitter"></i>
+    </a>
+    <a href="https://github.com/mdbootstrap/mdb-ui-kit" class="btn btn-primary m-1" role="button" rel="nofollow"
+      target="_blank">
+      <i class="fab fa-github"></i>
+    </a>
+  </div>
+
+</footer> {% endcomment %}
+
+</body>
+</html>
 {% endblock content %}
