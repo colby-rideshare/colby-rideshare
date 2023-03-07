@@ -1,7 +1,7 @@
 {% extends 'carpool/base.html' %}
 
 {% block title%}
-    <title> Landing Page </title>
+    <title> Home </title>
 {% endblock title %}
 
 {% block content %}
@@ -20,8 +20,7 @@ https://github.com/mdbootstrap/bootstrap-5-jumbotron-template/blob/main/jumbotro
       <div id="intro" class="p-5 text-center bg-light shadow-5 rounded mb-5">
         <h1 class="mb-3 h2">Colby Carpool App</h1>
         <p class="mb-3">Together, let's make it easy for members of the Colby community to find rides to and from campus</p>
-        <a class="btn btn-primary m-2" href="#learn-more" role="button" rel="nofollow"
-          target="_blank">Learn More</a>
+        <button class="btn btn-primary m-2" onclick="scrollToLearnMore()">Learn More</button>
       </div>
       <!-- Jumbotron -->
     </section>
@@ -162,6 +161,16 @@ https://github.com/mdbootstrap/bootstrap-5-jumbotron-template/blob/main/jumbotro
   </div>
 
 </footer> {% endcomment %}
+
+<script>
+  function scrollToLearnMore() {
+    // Get the element with id="learn-more"
+    var learnMoreElement = document.getElementById("learn-more");
+    
+    // Scroll to the element using the scrollIntoView() method
+    learnMoreElement.scrollIntoView({ behavior: 'smooth' });
+  }
+  </script>
 
 </body>
 </html>
