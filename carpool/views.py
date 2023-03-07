@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.contrib import messages
 from django.core.mail import send_mail
+from django.template.defaultfilters import date as date_filter
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
@@ -19,6 +20,7 @@ def landing_page(request):
     context = {'user': request.user}
     return render(request, 'carpool/landing.html', context)
 
+#view where users can view all posted rides except for their own or those that are filtered
 class RideListView(LoginRequiredMixin, ListView):
     model = Ride
     template_name = 'carpool/home.html'  #without this, by default, checks for 'app_name/model_name_viewtype.html (here viewtype is ListView)
@@ -82,6 +84,7 @@ class RideListView(LoginRequiredMixin, ListView):
             gas_model.gas_price = portland_gas_price
             gas_model.save()
     
+#this is view listing all rides a driver has posted
 class UserRideListView(LoginRequiredMixin, ListView):
     model = Ride
     template_name = 'carpool/user_rides.html'  #without this, by default, checks for 'app_name/model_name_viewtype.html (here viewtype is ListView)
@@ -102,6 +105,7 @@ class UserRideListView(LoginRequiredMixin, ListView):
             ride.driver = ride.driver
         return context
     
+#this is view where drivers post their rides
 class RideCreateView(LoginRequiredMixin, CreateView):
     model = Ride
     form_class = RideCreateForm
@@ -111,7 +115,7 @@ class RideCreateView(LoginRequiredMixin, CreateView):
         form.instance.driver = self.request.user
         form.instance.num_riders = 0
         response = super().form_valid(form)
-        messages.success(self.request, 'Your ride has been created successfully')
+        messages.success(self.request, 'Thank you for posting your ride! We will reach out if someone requests a ride for you')
         return response
 
     def get_context_data(self, **kwargs):
@@ -119,6 +123,7 @@ class RideCreateView(LoginRequiredMixin, CreateView):
         context['GOOGLE_API'] = GOOGLE_API
         return context
     
+#this is view where drivers update their posted rides
 class RideUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Ride
     form_class = RideUpdateForm
@@ -137,6 +142,7 @@ class RideUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         messages.success(self.request, 'Your ride has been updated successfully')
         return response
     
+#this is the view where riders contact the driver to inquire about a ride
 class RideSignUpView(LoginRequiredMixin, CreateView):
     model = RideRequest
     form_class = RideSignUpForm
@@ -157,28 +163,33 @@ class RideSignUpView(LoginRequiredMixin, CreateView):
         ride_request.save()
         
         #send email to driver
-        subject = f"{self.request.user.first_name} {self.request.user.last_name} is looking for a ride"
-        message = f"Message from {self.request.user.first_name}: {form.cleaned_data['message']}\n\n" \
-                  f"Please visit this link to view the ride request: {self.get_ride_request_url(ride_request)}"
+        subject = f"Colby Rideshare -- someone would like a ride from you"
+        message = f"{ride.driver.first_name},\n\n{self.request.user.first_name} {self.request.user.last_name} would like to join you on your upcoming trip.\n\n" \
+            f"Message from {self.request.user.first_name}:\n{form.cleaned_data['message']}\n\n" \
+            f"Please visit this link to view the details of the ride request: {self.get_ride_request_url(ride_request)}" \
+            f"\n\nBest,\nThe Colby Rideshare Team"
         from_email = os.environ.get('EMAIL_USER')
         recipient_list = [ride.driver.email]
         send_mail(subject, message, from_email, recipient_list)
         
         #send email to passenger
-        subject = f"Your ride request was successful"
-        message = f"{ride.driver.first_name} has been contacted. Your ride request is pending approval."
+        subject = f"Colby Rideshare -- your ride request was successful"
+        message = f"{self.request.user.first_name},\n\nYour ride request to {ride_request.destination} on {date_filter(ride.departure_day, 'F d')} was successful. " \
+            f"We have contacted {ride.driver.first_name} {ride.driver.last_name} and will let you know as soon as we hear back from them." \
+            f"\n\nBest,\nThe Colby Rideshare Team"
         from_email = os.environ.get('EMAIL_USER')
         recipient_list = [self.request.user.email]
         send_mail(subject, message, from_email, recipient_list)
         
         response = super().form_valid(form)
-        messages.success(self.request, 'You have successfully contacted the driver')
+        messages.success(self.request, 'The driver has been contacted and you will be notified as soon as they respond to your request')
         return response
     
     def get_ride_request_url(self, ride_request):
         ride_request_url = reverse('ride-request', args=[ride_request.ride.pk, ride_request.pk])
         return self.request.build_absolute_uri(ride_request_url)
     
+#this is view where drivers delete their posted ride
 class RideDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Ride
     success_url = '/'
@@ -194,6 +205,7 @@ class RideDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         messages.warning(self.request, 'Your ride has been deleted')
         return response
     
+#this is the view where drivers accept a rider's ride request
 class RideRequestView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = RideRequest
     form_class = RideRequestForm
@@ -216,29 +228,36 @@ class RideRequestView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return context
     
     def form_valid(self, form):
+        #TODO the ride_request object's accepted value is modified correctly, but it is not saving to the DB
         ride_request = RideRequest.objects.get(pk=self.kwargs['pk'])
         ride_request.accepted = True
         ride_request.save()
         
         #send email to driver
-        subject = f"You have accepted {ride_request.passenger.first_name} {ride_request.passenger.last_name}'s carpool request"
-        message = f"Thank you for helping the Colby community. " \
-          f"Please be mindful of {ride_request.passenger.first_name}'s travel plans -- " \
-          f"let {ride_request.passenger.first_name} know as soon as possible if anything changes."
-
+        subject = f"Colby Rideshare -- ride request accepted"
+        message = f"{ride_request.ride.driver.first_name},\n\nThank you for offering to drive {ride_request.passenger.first_name} {ride_request.passenger.last_name} to {ride_request.destination}! " \
+            f"Your contribution is making a big difference in the Colby community. " \
+            f"{ride_request.passenger.first_name} should be reaching out to you soon to ensure you both are on the same page regarding the logistics of your trip. " \
+            f"Please be mindful of {ride_request.passenger.first_name}'s travel plans and be sure to let {ride_request.passenger.first_name} know as soon as possible if anything changes. " \
+            f"Thank you for using Colby Rideshare and please help other students find rides by encouraging fellow mules to join!" \
+            f"\n\nSafe travels,\nThe Colby Rideshare Team"
         from_email = os.environ.get('EMAIL_USER')
         recipient_list = [ride_request.ride.driver.email]
         send_mail(subject, message, from_email, recipient_list)
         
         #send email to passenger
-        subject = f"{ride_request.ride.driver.first_name} {ride_request.ride.driver.last_name} has accepted your ride request"
-        message = f"{ride_request.ride.driver.first_name} {ride_request.ride.driver.last_name} is able to drive you to {ride_request.destination}. " \
-          f"Please be sure to thank your driver and to offer to chip in on gas costs -- it is more expensive than you think!"
-
+        subject = f"Colby Rideshare -- your ride request has been accepted"
+        message = f"{ride_request.passenger.first_name},\n\nGreat news -- {ride_request.ride.driver.first_name} {ride_request.ride.driver.last_name} is able to drive you to {ride_request.destination}! " \
+            f"Your ride will be leaving in the {ride_request.ride.time} on {date_filter(ride_request.ride.departure_day, 'F d')}. " \
+            f"Please be sure to thank {ride_request.ride.driver.first_name} and to offer to chip in on gas costs -- it is more expensive than you think! " \
+            f"It would be a good idea for you to reach out to {ride_request.ride.driver.first_name} directly and sort out the logistics of your trip. " \
+            f"{ride_request.ride.driver.first_name} can be reached at {ride_request.ride.driver.email}. " \
+            f"Thank you for using Colby Rideshare and please help other students find rides by encouraging fellow mules to join!" \
+            f"\n\nSafe travels,\nThe Colby Rideshare Team"
         from_email = os.environ.get('EMAIL_USER')
         recipient_list = [ride_request.passenger.email]
         send_mail(subject, message, from_email, recipient_list)
         
         response = super().form_valid(form)
-        messages.success(self.request, 'Thank you for helping the Colby community')
+        messages.success(self.request, 'You have successfully accepted the ride request -- thank you for helping the Colby community!')
         return response
