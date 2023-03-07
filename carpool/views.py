@@ -95,8 +95,6 @@ class UserRideListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         #self.get_gas_price()
         context = super().get_context_data(**kwargs)
-        context['first_name'] = context['rides'][0].driver.first_name
-        context['last_name'] = context['rides'][0].driver.last_name
         for ride in context['rides']:
             ride.spots_left = ride.capacity - ride.num_riders
             ride.origin_code = ride.origin
