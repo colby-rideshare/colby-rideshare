@@ -20,6 +20,7 @@ def landing_page(request):
     context = {'user': request.user}
     return render(request, 'carpool/landing.html', context)
 
+#view where users can view all posted rides except for their own or those that are filtered
 class RideListView(LoginRequiredMixin, ListView):
     model = Ride
     template_name = 'carpool/home.html'  #without this, by default, checks for 'app_name/model_name_viewtype.html (here viewtype is ListView)
@@ -83,6 +84,7 @@ class RideListView(LoginRequiredMixin, ListView):
             gas_model.gas_price = portland_gas_price
             gas_model.save()
     
+#this is view listing all rides a driver has posted
 class UserRideListView(LoginRequiredMixin, ListView):
     model = Ride
     template_name = 'carpool/user_rides.html'  #without this, by default, checks for 'app_name/model_name_viewtype.html (here viewtype is ListView)
@@ -103,6 +105,7 @@ class UserRideListView(LoginRequiredMixin, ListView):
             ride.driver = ride.driver
         return context
     
+#this is view where drivers post their rides
 class RideCreateView(LoginRequiredMixin, CreateView):
     model = Ride
     form_class = RideCreateForm
@@ -112,7 +115,7 @@ class RideCreateView(LoginRequiredMixin, CreateView):
         form.instance.driver = self.request.user
         form.instance.num_riders = 0
         response = super().form_valid(form)
-        messages.success(self.request, 'Your ride has been created successfully')
+        messages.success(self.request, 'Thank you for posting your ride! We will reach out if someone requests a ride for you')
         return response
 
     def get_context_data(self, **kwargs):
@@ -120,6 +123,7 @@ class RideCreateView(LoginRequiredMixin, CreateView):
         context['GOOGLE_API'] = GOOGLE_API
         return context
     
+#this is view where drivers update their posted rides
 class RideUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Ride
     form_class = RideUpdateForm
@@ -178,13 +182,14 @@ class RideSignUpView(LoginRequiredMixin, CreateView):
         send_mail(subject, message, from_email, recipient_list)
         
         response = super().form_valid(form)
-        messages.success(self.request, 'You have successfully contacted the driver')
+        messages.success(self.request, 'The driver has been contacted and you will be notified as soon as they respond to your request')
         return response
     
     def get_ride_request_url(self, ride_request):
         ride_request_url = reverse('ride-request', args=[ride_request.ride.pk, ride_request.pk])
         return self.request.build_absolute_uri(ride_request_url)
     
+#this is view where drivers delete their posted ride
 class RideDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Ride
     success_url = '/'
