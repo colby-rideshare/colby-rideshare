@@ -6,7 +6,7 @@ from django.template.defaultfilters import date as date_filter
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from .models import Ride, RideRequest, GasPrice
+from .models import Ride, RideRequest, GasPrice, Stop
 from .forms import RideSignUpForm, RideCreateForm, RideUpdateForm, RideFilterForm, RideRequestForm
 import os
 from . import gmaps
@@ -48,6 +48,10 @@ class RideListView(LoginRequiredMixin, ListView):
             ride.origin_code = ride.origin
             ride.dst_code = ride.destination
             ride.GOOGLE_API = GOOGLE_API
+            stops  = []
+            for stop in ride.stop.all():
+                stops.append(stop.stop)
+            ride.waypoints = '|'.join(stops)
         return context
     
 
@@ -158,10 +162,14 @@ class RideSignUpView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         ride_request = form.save(commit=False) #commit = False saves it to memory but not DB, so can still modify before saving to DB
         ride = Ride.objects.get(pk=self.kwargs['ride_pk'])
+
         ride_request.ride = ride
+        
+         #MAYBE: Store all stops as a single strin
+        
         ride_request.passenger = self.request.user
         ride_request.save()
-        
+
         #send email to driver
         subject = f"Colby Rideshare -- someone would like a ride from you"
         message = f"{ride.driver.first_name},\n\n{self.request.user.first_name} {self.request.user.last_name} would like to join you on your upcoming trip.\n\n" \
@@ -206,7 +214,8 @@ class RideDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         response = super().form_valid(form)
         messages.warning(self.request, 'Your ride has been deleted')
         return response
-    
+
+
 #this is the view where drivers accept a rider's ride request
 class RideRequestView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = RideRequest
@@ -225,6 +234,16 @@ class RideRequestView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         ride_request = self.get_object()
         ride = ride_request.ride
+
+
+        stops  = []
+        for stop in ride.stop.all():
+            stops.append(stop.stop)
+
+        ride.waypoints = '|'.join(stops)
+        new_waypoints = ride.waypoints + '|' + ride_request.destination
+        
+        context['new_waypoints'] = new_waypoints
         context['ride'] = ride
         context['GOOGLE_API'] = GOOGLE_API
         return context
@@ -233,7 +252,9 @@ class RideRequestView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         #TODO the ride_request object's accepted value is modified correctly, but it is not saving to the DB
         ride_request = RideRequest.objects.get(pk=self.kwargs['pk'])
         ride_request.accepted = True
+        stop = Stop(ride = ride_request.ride, stop = ride_request.destination)
         ride_request.save()
+        stop.save()
         
         #send email to driver
         subject = f"Colby Rideshare -- ride request accepted"

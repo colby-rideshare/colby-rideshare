@@ -20,6 +20,8 @@ class Ride(models.Model):
         (EVENING, 'Evening'),
     )
 
+    id = models.IntegerField(primary_key = True)
+
     origin = models.CharField(max_length=100)
     destination = models.CharField(max_length=100)
     departure_day = models.DateField()
@@ -50,3 +52,9 @@ class GasPrice(models.Model):
     last_update = models.DateTimeField()
     next_update = models.DateTimeField()
     gas_price = models.FloatField()
+
+#This class stores stops and is linked to the Rides table
+class Stop(models.Model):
+    ride = models.ForeignKey(Ride, on_delete=models.SET_NULL, related_name='stop', null = True)
+    stop = models.CharField(max_length=100)
+

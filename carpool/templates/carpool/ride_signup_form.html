@@ -32,13 +32,6 @@
                 <fieldset class="form-group"> <!-- fieldset creates box around content -->
                     <legend class="border-bottom mt-3 mb-4" style="text-align: center;">Enter information on your ride:</legend>
                         {{ form.non_field_errors }}
-
-                            <div class="fieldWrapper row mx-4 mb-1">
-                                {{ form.origin.errors }}
-                                <label for="{{ form.origin.id_for_label }}">Where are you leaving from?</label>
-                                {{form.origin}}
-                            </div>
-
                             <div class="fieldWrapper row mx-4 mb-1">
                                 {{ form.destination.errors }}
                                 <label for="{{ form.destination.id_for_label }}">Where are you going?</label>

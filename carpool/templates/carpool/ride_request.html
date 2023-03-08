@@ -45,7 +45,7 @@
                         height="250"
                         frameborder="0" style="border:0"
                         referrerpolicy="no-referrer-when-downgrade"
-                        src="https://www.google.com/maps/embed/v1/directions?key={{GOOGLE_API}}&origin={{ride_request.ride.origin}}&destination={{ride_request.ride.destination}}">
+                        src="https://www.google.com/maps/embed/v1/directions?key={{GOOGLE_API}}&origin={{ride.origin}}&destination={{ride.destination}}&waypoints={{ride.waypoints}}">
                     </iframe>
                 </div>                            
             </td>
@@ -56,7 +56,7 @@
                         height="250"
                         frameborder="0" style="border:0"
                         referrerpolicy="no-referrer-when-downgrade"
-                        src="https://www.google.com/maps/embed/v1/directions?key={{GOOGLE_API}}&origin={{ride_request.ride.origin}}&destination={{ride_request.ride.destination}}&waypoints={{ride_request.destination}}">
+                        src="https://www.google.com/maps/embed/v1/directions?key={{GOOGLE_API}}&origin={{ride.origin}}&destination={{ride.destination}}&waypoints={{new_waypoints}}">
                     </iframe>
                 </div>                            
             </td>
