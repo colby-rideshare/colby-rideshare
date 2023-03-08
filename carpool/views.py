@@ -115,7 +115,7 @@ class RideCreateView(LoginRequiredMixin, CreateView):
         form.instance.driver = self.request.user
         form.instance.num_riders = 0
         response = super().form_valid(form)
-        messages.success(self.request, 'Thank you for posting your ride! We will reach out if someone requests a ride for you')
+        messages.success(self.request, 'Thank you for posting your ride! We will reach out if someone requests a ride with you')
         return response
 
     def get_context_data(self, **kwargs):
