@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, SupportForm
+from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, SupportForm, ProfileRegisterForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import DetailView, FormView
@@ -9,17 +9,39 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 import os
 
+# old register method we are trying to overwrite
+# def register(request):
+#     if request.method == 'POST':
+#         form = UserRegisterForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             username = form.cleaned_data.get('username')
+#             messages.success(request, f'Account created for {username}')
+#             return redirect('login')
+#     else:
+#         form = UserRegisterForm()
+#     return render(request, 'users/register.html', {'form':form})
+
 def register(request):
     if request.method == 'POST':
-        form = UserRegisterForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
+        u_form = UserRegisterForm(request.POST)
+        p_form = ProfileRegisterForm(request.POST, request.FILES)
+        if u_form.is_valid() and p_form.is_valid():
+            user = u_form.save()
+            try:
+                profile = Profile.objects.get(user=user)
+                p_form = ProfileRegisterForm(request.POST, request.FILES, instance=profile)
+            except Profile.DoesNotExist:
+                profile = p_form.save(commit=False)
+                profile.user = user
+                p_form.save()
+            username = u_form.cleaned_data.get('username')
             messages.success(request, f'Account created for {username}')
             return redirect('login')
     else:
-        form = UserRegisterForm()
-    return render(request, 'users/register.html', {'form':form})
+        u_form = UserRegisterForm()
+        p_form = ProfileRegisterForm()
+    return render(request, 'users/register.html', {'u_form':u_form, 'p_form':p_form})
 
 @login_required  #this @ is called a decorator and adds functionality to existing function
 def profile(request):

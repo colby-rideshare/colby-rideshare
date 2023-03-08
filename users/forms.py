@@ -19,13 +19,12 @@ class UserRegisterForm(UserCreationForm):
     
     class Meta:
         model = User
-        fields = ['username','first_name','last_name','email','password1','password2']
+        fields = ['username','password1','password2','first_name','last_name','email']
         
-# try to make it so that profile can be created right away without needing user first
-# class ProfileRegisterForm(UserCreationForm):
-#     class Meta:
-#         model = Profile
-#         fields = ['image']
+class ProfileRegisterForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['image']
         
 class UserUpdateForm(forms.ModelForm):
     first_name = forms.CharField(max_length=100)
