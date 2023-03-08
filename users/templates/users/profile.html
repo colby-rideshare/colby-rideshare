@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 
 {% block title%}
-    <title> Profile view </title>
+    <title> My profile </title>
 {% endblock title %}
 
 {% block content %}
@@ -10,10 +10,10 @@
     <div class="col-md-4 mx-auto mt-4 border border-secondary rounded">
         <div class="media">
             <img class="rounded-circle account-img mt-3" src={{ user.profile.image.url }} style="display: block; margin: 0 auto;">
-        <div class="media-body">
+        {% comment %} <div class="media-body">
             <h2 class="account-heading text-center">{{ user.username }}</h2>
             <p class="text-secondary text-center">{{ user.email }}</p>
-        </div>
+        </div> {% endcomment %}
         </div>
         <form method="POST" enctype="multipart/form-data"> <!-- need the enctype to save image properly -->
             {% csrf_token %} <!-- django security features -->

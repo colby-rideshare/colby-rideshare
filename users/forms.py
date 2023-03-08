@@ -36,6 +36,12 @@ class UserUpdateForm(forms.ModelForm):
         fields = ['username','first_name','last_name','email']
         
 class ProfileUpdateForm(forms.ModelForm):
+    image = forms.ImageField(required=False, widget=forms.FileInput)
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['image'].label = 'Profile picture'
+
     class Meta:
         model = Profile
         fields = ['image']
