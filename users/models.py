@@ -6,7 +6,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     # on_delete argument deals with what to do if user is deleted
     # models.CASCADE means if user is deleted, delete their profile, but if profile is deleted, keep user
-    image = models.ImageField(default='default.jpg', upload_to='profile_pics')  #user profile pic
+    image = models.ImageField(verbose_name='Profile picture', default='default.jpg', upload_to='profile_pics')  #user profile pic
     
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}'s Profile"
