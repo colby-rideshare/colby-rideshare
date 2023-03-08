@@ -25,60 +25,68 @@
 {% endblock title %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-md-8 mx-auto mt-4 border border-secondary rounded">
-            <form method="POST">
-                {% csrf_token %} <!-- django security features -->
-                <fieldset class="form-group"> <!-- fieldset creates box around content -->
-                    <legend class="border-bottom mt-3 mb-4" style="text-align: center;">Enter ride details</legend>
-                        {{ form.non_field_errors }}
-                        <div class="fieldWrapper row">
-                            <div class="col-md-6">
-                                {{ form.origin.errors }}
-                                <label for="{{ form.origin.id_for_label }}">Origin:</label>
-                                {{form.origin}}
-                            </div>
-                            <div class="col-md-6">
-                                {{ form.destination.errors }}
-                                <label for="{{ form.destination.id_for_label }}">Destination:</label>
-                                    {{form.destination}}
-                            </div>
-                        </div>
-                        <div class="fieldWrapper row">
-                            <div class="col-md-2">
-                                {{ form.capacity.errors }}
-                                <label for="{{ form.capacity.id_for_label }}">Spots in car:</label>
-                                {{ form.capacity }}
-                            </div>
-                            <div class="col-md-3">
-                                {{ form.departure_day.errors }}
-                                <label for="{{ form.departure_day.id_for_label }}">Day of departure:</label>
-                                {{ form.departure_day }}
-                            </div>
-                            <div class="col-md-3">
-                                {{ form.time.errors }}
-                                <label for="{{ form.time.id_for_label }}">Time of departure:</label>
-                                {{ form.time }}
-                            </div>
-                        </div>
-                        <div class="fieldWrapper mb-3">
-                            {{ form.notes.errors }}
-                            <label for="{{ form.notes.id_for_label }}">Optional notes:</label>
-                            {{ form.notes }}
-                        </div>
-                </fieldset>
+<div class="row">
+    <div class="col-md-8 mx-auto mt-4 border border-secondary rounded">
+        <form method="POST">
+            {% csrf_token %} <!-- django security features -->
+
+            <fieldset class="form-group">
+                <legend class="border-bottom mt-3 mb-4" style="text-align: center;">Enter ride details</legend>
+                {{ form.non_field_errors }}
+                
+                <div class="fieldWrapper row mx-4 mb-1">
+                    {{ form.origin.errors }}
+                    <label for="{{ form.origin.id_for_label }}">Origin:</label>
+                    {{ form.origin }}
+                </div>
+                
+                <div class="fieldWrapper row mx-4 mb-1">
+                    {{ form.destination.errors }}
+                    <label for="{{ form.destination.id_for_label }}">Destination:</label>
+                    {{ form.destination }}
+                </div>
+                
+                <div class="fieldWrapper row mx-3 mb-1">
+                    {{ form.departure_day.errors }}
+                    <label for="{{ form.departure_day.id_for_label }}">Day of departure:</label>
+                    {{ form.departure_day }}
+                </div>
+                  
+                <div class="fieldWrapper row mx-3 mb-1">
+                    <div class="col-md-3">
+                    {{ form.time.errors }}
+                    <label for="{{ form.time.id_for_label }}">Time of departure:</label>
+                    {{ form.time }}   
+                    </div>                                                  
+                </div>
+
+                <div class="fieldWrapper row mx-3 mb-1">
+                    <div class="col-md-2">
+                    {{ form.capacity.errors }}
+                    <label for="{{ form.capacity.id_for_label }}">Spots in car:</label>
+                    {{ form.capacity }}
+                    </div>
+                </div>
+                
+                <div class="fieldWrapper mx-4 mb-3">
+                  {{ form.notes.errors }}
+                  <label for="{{ form.notes.id_for_label }}">Optional notes:</label>
+                  {{ form.notes }}
+                </div>
+              </fieldset>
+
                 <div class="form-group">
                     <a href="{% url 'my-rides' ride.driver.username %}">
-                        <button type="button" class="btn btn-secondary mb-3">
+                        <button type="button" class="btn btn-secondary mb-3 mx-1">
                         Go Back
                         </button>
                     </a>
+                    <button class="btn btn-primary mb-3 mx-1" type="submit">Update Ride</button>
                     <a href="{% url 'ride-delete' ride.id %}">
-                        <button type="button" class="btn btn-danger mb-3">
+                        <button type="button" class="btn btn-danger mb-3 mx-1">
                         Delete Ride
                         </button>
                     </a>
-                    <button class="btn btn-primary mb-3" type="submit">Update Ride</button>
                 </div>
             </form>
         </div>
