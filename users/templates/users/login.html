@@ -14,14 +14,15 @@
                 <legend class="border-bottom text-center mb-4">Log In</legend>
                 {{ form|crispy }} <!-- |crispy applies crispy forms styling to form -->
             </fieldset>
-            <div class="form-group">
+            <div class="form-group text-center">
                 <button class="btn btn-primary mt-3" type="submit">Log In</button>
                 <small class="text-muted mt-3">
                     <a style="margin-left: 10px;"href="{% url 'password_reset' %}">Forgot password?</a>
                 </small>
             </div>
+            <br>
         </form>
-        <div class="border-top pt-3">
+        <div class="border-top text-center pt-3 mb-1">
             <small class="text-muted">
                 Need an account?<a style="margin-left: 10px;" href="{% url 'register' %}">Sign up here</a>
             </small>
