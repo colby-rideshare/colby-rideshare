@@ -7,11 +7,11 @@
 
 {% block content %}
 <div class="row d-flex align-items-center">
-    <div class="col-md-4 mx-auto mt-4 text-center border border-secondary rounded">
+    <div class="col-md-4 mx-auto mt-4 border border-secondary rounded">
         <form method="POST">
             {% csrf_token %} <!-- django security features -->
             <fieldset class="form-group"> <!-- fieldset creates box around content -->
-                <legend class="border-bottom mb-4">Log In</legend>
+                <legend class="border-bottom text-center mb-4">Log In</legend>
                 {{ form|crispy }} <!-- |crispy applies crispy forms styling to form -->
             </fieldset>
             <div class="form-group">

@@ -7,18 +7,18 @@
 
 {% block content %}
 <div class="row d-flex align-items-center">
-    <div class="col-md-4 mx-auto mt-4 text-center border border-secondary rounded">
+    <div class="col-md-4 mx-auto mt-4 border border-secondary rounded">
         <div class="media">
-        <img class="rounded-circle account-img" src={{ user.profile.image.url }}>
+            <img class="rounded-circle account-img mt-3" src={{ user.profile.image.url }} style="display: block; margin: 0 auto;">
         <div class="media-body">
-            <h2 class="account-heading">{{ user.username }}</h2>
-            <p class="text-secondary">{{ user.email }}</p>
+            <h2 class="account-heading text-center">{{ user.username }}</h2>
+            <p class="text-secondary text-center">{{ user.email }}</p>
         </div>
         </div>
         <form method="POST" enctype="multipart/form-data"> <!-- need the enctype to save image properly -->
             {% csrf_token %} <!-- django security features -->
             <fieldset class="form-group"> <!-- fieldset creates box around content -->
-                <legend class="border-bottom mb-4">Profile info</legend>
+                <legend class="border-bottom text-center mb-4">Profile info</legend>
                 {{ u_form|crispy }} <!-- |crispy applies crispy forms styling to form -->
                 {{ p_form|crispy }}
             </fieldset>
