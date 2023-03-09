@@ -16,7 +16,7 @@
     <div class="col-lg-12">
     <div class="section-title text-center">
     <div class="title-text">
-    <h2>Ride Schedule</h2>
+    <h2>Available Rides</h2>
     </div>
     </div>
     </div>
@@ -24,12 +24,44 @@
     </div>
 
     <div class="container">
+        
+        <!-- BEGINNING RIDE FILTER FORM -->
         <form method="GET">
-          {{ form.as_p }}
-          <button type="submit" name="clear" class="btn btn-secondary mx-1">Clear</button>
-          <button type="submit" name="filter" class="btn btn-primary mx-1">Filter</button>
-        </form>
-        <hr>
+              <p>
+        <label for="id_departure_date">Departure date:</label>
+        <div class="input-group dbdp">
+      <input type="text" name="departure_date" id="id_departure_date" data-dbdp-config="{&quot;variant&quot;: &quot;date&quot;, &quot;backend_date_format&quot;: &quot;YYYY-MM-DD&quot;, &quot;options&quot;: {}}" data-dbdp-debug="">
+    
+    
+      <div class="input-group-addon input-group-append input-group-text">
+        <i class="bi-calendar"></i>
+      </div>
+    </div>
+
+      </p>
+    
+      
+      <p>
+        <label for="id_departure_time">Departure time:</label>
+        <select name="departure_time" class="form-control" id="id_departure_time" style="width: 215px;">
+
+    <option value="Any">Any</option>
+    
+    <option value="Morning">Morning</option>
+
+    <option value="Afternoon">Afternoon</option>
+
+    <option value="Evening">Evening</option>
+    
+    </select>
+
+      </p>
+              <button type="submit" name="clear" class="btn btn-secondary mx-1">Clear</button>
+              <button type="submit" name="filter" class="btn btn-primary mx-1">Filter</button>
+            </form>
+    <!-- END RIDE FILTER FORM -->
+
+    <hr>
     
     <div class="row">
     <div class="col-lg-12">
