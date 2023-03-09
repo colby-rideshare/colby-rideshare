@@ -36,7 +36,7 @@ To run the app locally, follow these steps:
 
 2. Install dependencies
 
-```cd carpool-app\npip install -r requirements.txt```
+```pip install -r requirements.txt```
 
 3. Create an admin user
 
@@ -46,4 +46,6 @@ To run the app locally, follow these steps:
 
 ```python manage.py runserver```
 
-That's it! You can now open the app by visiting http://localhost:8000/ in your browser
+5. Open app on local machine
+
+  That's it! You can now open the app by visiting http://localhost:8000/ in your browser
