@@ -28,8 +28,6 @@ Colby Rideshare is a web application designed to help members of the Colby commu
 
 To run the app locally, follow these steps:
 
-### Installation
-
 1. Clone the repository
 
 ```git clone https://github.com/max-duchesne/carpool-app.git```
@@ -46,6 +44,6 @@ To run the app locally, follow these steps:
 
 ```python manage.py runserver```
 
-5. Open app on local machine
+5. Open app in browser
 
-    That's it! You can now open the app by visiting http://localhost:8000/ in your browser
+That's it! You can now open the app by visiting http://localhost:8000/ in your browser
