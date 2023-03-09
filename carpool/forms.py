@@ -31,7 +31,7 @@ class RideCreateForm(forms.ModelForm):
             'departure_day': DatePickerInput(),
             'origin' : forms.TextInput({'id':'origin', 'type': 'text'}),
             'destination' : forms.TextInput({'id':'destination', 'type': 'text'}),
-            'notes': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Ex: Need to pick up a friend at Bowdoin', 'required': False}),
+            'notes': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'i.e. "Will be making a stop to grab food" or "I don\'t have a set departure time and would be happy to leave earlier or later"', 'required': False}),
             'capacity': forms.NumberInput(attrs={'class': 'form-control'}),
             'time': forms.Select(choices=Ride.TIME_CHOICES, attrs={'class': 'form-control', 'placeholder': ''})
         }
