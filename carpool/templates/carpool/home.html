@@ -126,24 +126,26 @@
                         </button>
     
                         <div class="modal fade" id="Modal{{ride.id}}" tabindex="-1" aria-labelledby="Modal{{ride.id}}Label" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-dialog modal-dialog-scrollable">
                             <div class="modal-content">
                                 <div class="modal-header">
                                 <h3 class="modal-title" id="Modal{{ride.id}}Label">Ride Details</h3>
                                 <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
+                                    <br><h5>Leaving from:</h5>
+                                    <p>{{ ride.origin}}</p>  
+                                    <br><h5>Going to:</h5>
+                                    <p>{{ ride.destination}}</p>  
+                                    <br><h5>Room in car:</h5>
+                                    <p>{{ ride.driver.first_name }} has room for {{ ride.capacity }} people and {{ ride.num_riders }} other people are on this ride</p>  
                                     {% if ride.notes|length > 0 %}
-                                        <h5>Notes from driver:</h5>
+                                        <br><h5>Notes from driver:</h5>
                                         <p>{{ ride.notes }}</p>
-                                        <br><h5>Room in the car:</h5>
-                                        <p>{{ ride.driver.first_name }} has room for {{ ride.capacity }} people and {{ ride.num_riders }} other people are on this ride</p>
                                     {% else %}
-                                        <h5>Notes from driver:</h5>
+                                        <br><h5>Notes from driver:</h5>
                                         <p>N/A</p>
-                                        <br><h5>Room in the car:</h5>
-                                        <p>{{ ride.driver.first_name }} has room for {{ ride.capacity }} people and {{ ride.num_riders }} other people are on this ride</p>
-                                    {% endif %}            
+                                    {% endif %}         
                                 </div>
                                 <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
