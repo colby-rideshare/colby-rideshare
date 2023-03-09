@@ -32,19 +32,19 @@ To run the app locally, follow these steps:
 
 1. Clone the repository
 
-git clone https://github.com/max-duchesne/carpool-app.git
+```git clone https://github.com/max-duchesne/carpool-app.git```
 
 2. Install dependencies
 
-cd carpool-app
-pip install -r requirements.txt
+```cd carpool-app```
+```pip install -r requirements.txt```
 
 3. Create an admin user
 
-python manage.py createsuperuser
+```python manage.py createsuperuser```
 
 4. Run the local server
 
-python manage.py runserver
+```python manage.py runserver```
 
 That's it! You can now open the app by visiting http://localhost:8000/ in your browser
