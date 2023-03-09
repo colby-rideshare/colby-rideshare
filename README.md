@@ -36,7 +36,7 @@ To run the app locally, follow these steps:
 
 2. Install dependencies
 
-```cd carpool-app```\n
+```cd carpool-app```"\n"
 ```pip install -r requirements.txt```
 
 3. Create an admin user
