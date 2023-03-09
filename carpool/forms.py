@@ -16,6 +16,11 @@ class RideRequestForm(forms.ModelForm):
     class Meta:
         model = RideRequest
         fields = ['accepted']
+        
+class RideDeclineRequestForm(forms.ModelForm):
+    class Meta:
+        model = RideRequest
+        fields = ['declined']
 
 class RideCreateForm(forms.ModelForm):
     class Meta:

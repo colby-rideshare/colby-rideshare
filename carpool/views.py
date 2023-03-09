@@ -10,7 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .models import Ride, RideRequest, GasPrice
-from .forms import RideSignUpForm, RideCreateForm, RideUpdateForm, RideFilterForm, RideRequestForm
+from .forms import RideSignUpForm, RideCreateForm, RideUpdateForm, RideFilterForm, RideRequestForm, RideDeclineRequestForm
 import os
 from . import gmaps
 from . import GAS_API, GOOGLE_API
@@ -279,4 +279,47 @@ class RideRequestView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         
         response = super().form_valid(form)
         messages.success(self.request, 'You have successfully accepted the ride request -- thank you for helping the Colby community!')
+        return response
+    
+#handles logic for when driver declines a ride request
+class RideDeclineView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = RideRequest
+    form_class = RideDeclineRequestForm
+    template_name = 'carpool/ride_request.html'
+    context_object_name = 'ride_request'
+    success_url = '/'
+    
+    def test_func(self):
+        ride_request = self.get_object()
+        if self.request.user == ride_request.ride.driver:
+            return True
+        return False
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        ride_request = self.get_object()
+        ride = ride_request.ride
+        context['ride'] = ride
+        context['GOOGLE_API'] = GOOGLE_API
+        return context
+    
+    def form_valid(self, form):
+        #TODO the ride_request object's accepted value is modified correctly, but it is not saving to the DB
+        ride_request = RideRequest.objects.get(pk=self.kwargs['pk'])
+        ride_request.declined = True
+        ride_request.save()
+        
+        #send email to passenger
+        subject = f"Colby Rideshare -- your ride request has been declined"
+        message = f"Hi {ride_request.passenger.first_name},\n\nUnfortunately, {ride_request.ride.driver.first_name} {ride_request.ride.driver.last_name} will not be able to drive you to {ride_request.destination}. " \
+            f"We apologize for any inconvenience that this may cause. We encourage you to visit https://www.colbyrideshare.live/rides/ to view other rides -- " \
+            f"there is a good chance that someone else will be able to drive you. " \
+            f"As always, please let us know if we can help you in any way." \
+            f"\n\nBest,\nThe Colby Rideshare Team"
+        from_email = os.environ.get('EMAIL_USER')
+        recipient_list = [ride_request.passenger.email]
+        send_mail(subject, message, from_email, recipient_list)
+        
+        response = super().form_valid(form)
+        messages.warning(self.request, 'You have successfully declined the ride request -- we will inform the prospective rider')
         return response
