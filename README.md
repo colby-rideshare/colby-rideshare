@@ -1,6 +1,6 @@
 # Colby Rideshare
 
-Colby Rideshare is a web-based application that helps Colby students find rides to and from campus. The app is built using Django and Bootstrap and is deployed to Heroku with the domain www.colbyrideshare.live.
+Colby Rideshare is a web application designed to help members of the Colby community find rides to and from campus. The app is built using Django and Bootstrap and is deployed to Heroku under the domain https://www.colbyrideshare.live.
 
 ## Features
 
@@ -8,15 +8,15 @@ Colby Rideshare is a web-based application that helps Colby students find rides 
 - User profile management
 - Ride creation and management
 - Ride search and filtering
-- Google Maps integration for location search
 - Email notifications for ride requests and updates
-- AWS S3 integration for image storage
-- Analytics tracking with PostHog
+- Google Maps Directions integration for location and route display
+- Google Place Autocomplete integration for location input
+- AWS S3 for image storage
 
 ## Technologies Used
 
 - Front-end: Bootstrap, HTML, CSS, JavaScript
-- Back-end: Django, Python
+- Back-end: Django
 - Database: PostgreSQL
 - Deployment: Heroku
 - Email Service: Gmail
@@ -27,11 +27,6 @@ Colby Rideshare is a web-based application that helps Colby students find rides 
 ## Getting Started
 
 To run the app locally, follow these steps:
-
-### Prerequisites
-
-- Python 3.9 or higher
-- Django 4.0 or higher
 
 ### Installation
 
