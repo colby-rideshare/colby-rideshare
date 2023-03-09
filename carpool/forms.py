@@ -59,7 +59,19 @@ class RideUpdateForm(forms.ModelForm):
         }
         
 class RideFilterForm(forms.Form):
-    target_date = forms.DateField(required=False, widget=DatePickerInput())
+    ANY = 'Any'
+    MORNING = 'Morning'
+    AFTERNOON = 'Afternoon'
+    EVENING = 'Evening'
+    TIME_CHOICES = (
+        (ANY, 'Any'),
+        (MORNING, 'Morning'),
+        (AFTERNOON, 'Afternoon'),
+        (EVENING, 'Evening'),
+    )
+    
+    departure_date = forms.DateField(required=False, widget=DatePickerInput())
+    departure_time = forms.ChoiceField(choices=TIME_CHOICES, required=False, widget=forms.Select(attrs={'class': 'form-control'}))
     
     class Meta:
-        fields = ['departure_day']  #should add time of day here also
+        fields = ['departure_date', 'departure_time']

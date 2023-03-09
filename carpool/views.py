@@ -34,11 +34,20 @@ class RideListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         queryset = queryset.exclude(departure_day__lt=timezone.now().date())
-        target_date = self.request.GET.get('target_date')
-        if target_date:
-            queryset = queryset.filter(departure_day=target_date)
+        departure_date = self.request.GET.get('departure_date')
+        departure_time = self.request.GET.get('departure_time')
+        if departure_date:
+            queryset = queryset.filter(departure_day=departure_date)
             if not queryset.exists():
-                messages.warning(self.request, 'No rides found for the selected date')
+                messages.warning(self.request, 'No rides found for the selected date and time')
+            elif departure_time and departure_time != 'Any':
+                queryset = queryset.filter(time=departure_time)
+                if not queryset.exists():
+                    messages.warning(self.request, 'No rides found for the selected date and time')
+        if not departure_date and departure_time and departure_time != 'Any':
+            queryset = queryset.filter(time=departure_time)
+            if not queryset.exists():
+                messages.warning(self.request, 'No rides found for the selected date and time')
         queryset = queryset.exclude(driver=self.request.user)
         queryset = queryset.exclude(num_riders__gte=F('capacity'))
         return queryset
