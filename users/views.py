@@ -24,7 +24,20 @@ def register(request):
                 profile.user = user
                 p_form.save()
                 
-            #should send welcome email    
+            #send welcome email to user
+            subject = "Welcome to Colby Rideshare!"
+            message = f"Hi {user.first_name},\n\nThank you for signing up for Colby Rideshare! We're excited to have you as a part of our community. " \
+                f"Colby Rideshare was created for Colby students, by Colby students, to help members of our community get to and from campus seamlessly. " \
+                f"Whether you're looking for a ride to Portland Jetport or just looking for people to keep you company on a long drive back to New York, " \
+                f"we hope that Colby Rideshare will bring us closer as a community and ease some of the stress that many students have when making travel plans to and from Colby. " \
+                f"Colby Rideshare is completely free to use, although riders are encouraged to chip in for drivers' gas costs.\n\n" \
+                f"To get started, simply log in at https://carpool-app.herokuapp.com/ with your username and password. From there, you can post an upcoming ride if you are driving or search for other ride offers. " \
+                f"Please don't hesitate to reach out to our support team at https://carpool-app.herokuapp.com/support/ if you have any questions, issues, or suggestions on how we can improve. " \
+                f"Thanks again for using Colby Rideshare and please help other students find rides by encouraging fellow Mules to join!" \
+                f"\n\nBest,\nThe Colby Rideshare Team"
+            from_email = os.environ.get('EMAIL_USER')
+            recipient_list = [user.email]
+            send_mail(subject, message, from_email, recipient_list) 
             
             username = u_form.cleaned_data.get('username')
             messages.success(request, f'Account created for {username}')
