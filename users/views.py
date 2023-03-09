@@ -33,7 +33,7 @@ def register(request):
                 f"Colby Rideshare is completely free to use, although riders are encouraged to chip in for drivers' gas costs.\n\n" \
                 f"To get started, simply log in at https://www.colbyrideshare.live with your username and password. From there, you can post an upcoming ride if you are driving or search for other ride offers. " \
                 f"Please don't hesitate to reach out to our support team at https://www.colbyrideshare.live/support/ if you have any questions, issues, or suggestions on how we can improve. " \
-                f"Thanks again for using Colby Rideshare and please help other students find rides by encouraging fellow Mules to join!" \
+                f"Thanks again for using Colby Rideshare -- please help other students find rides by encouraging fellow Mules to join!" \
                 f"\n\nBest,\nThe Colby Rideshare Team"
             from_email = os.environ.get('EMAIL_USER')
             recipient_list = [user.email]

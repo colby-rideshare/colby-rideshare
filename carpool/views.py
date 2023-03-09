@@ -177,7 +177,7 @@ class RideSignUpView(LoginRequiredMixin, CreateView):
         message = f"Hi {ride.driver.first_name},\n\n{self.request.user.first_name} {self.request.user.last_name} would like to join you on your upcoming trip.\n\n" \
             f"Message from {self.request.user.first_name}:\n{form.cleaned_data['message']}\n\n" \
             f"Please visit this link to view the details of the ride request: {self.get_ride_request_url(ride_request)}\n\n" \
-            f"Thank you for using Colby Rideshare and please help other students find rides by encouraging fellow Mules to join!" \
+            f"Thank you for using Colby Rideshare -- please help other students find rides by encouraging fellow Mules to join!" \
             f"\n\nBest,\nThe Colby Rideshare Team"
         from_email = os.environ.get('EMAIL_USER')
         recipient_list = [ride.driver.email]
@@ -188,7 +188,7 @@ class RideSignUpView(LoginRequiredMixin, CreateView):
         message = f"Hi {self.request.user.first_name},\n\nYour ride request to {ride_request.destination} on {date_filter(ride.departure_day, 'F d')} was successful. " \
             f"We have contacted {ride.driver.first_name} {ride.driver.last_name} and will let you know as soon as we hear back from them. " \
             f"If you would like to follow up with your driver directly you can email {ride.driver.first_name} at {ride.driver.email}. " \
-            f"Thank you for using Colby Rideshare and please help other students find rides by encouraging fellow Mules to join!" \
+            f"Thank you for using Colby Rideshare -- please help other students find rides by encouraging fellow Mules to join!" \
             f"\n\nBest,\nThe Colby Rideshare Team"
         from_email = os.environ.get('EMAIL_USER')
         recipient_list = [self.request.user.email]
@@ -258,7 +258,7 @@ class RideRequestView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             f"{ride_request.passenger.first_name} should be reaching out to you soon to ensure you both are on the same page regarding the logistics of your trip. " \
             f"Please be mindful of {ride_request.passenger.first_name}'s travel plans and be sure to let {ride_request.passenger.first_name} know as soon as possible if anything changes. " \
             f"{ride_request.passenger.first_name} can be reached at {ride_request.passenger.email}. " \
-            f"Thank you for using Colby Rideshare and please help other students find rides by encouraging fellow Mules to join!" \
+            f"Thank you for using Colby Rideshare -- please help other students find rides by encouraging fellow Mules to join!" \
             f"\n\nSafe travels,\nThe Colby Rideshare Team"
         from_email = os.environ.get('EMAIL_USER')
         recipient_list = [ride_request.ride.driver.email]
@@ -271,7 +271,7 @@ class RideRequestView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             f"Please be sure to thank {ride_request.ride.driver.first_name} and to offer to chip in on gas costs -- it is more expensive than you think! " \
             f"It would be a good idea for you to reach out to {ride_request.ride.driver.first_name} directly and sort out the logistics of your trip. " \
             f"{ride_request.ride.driver.first_name} can be reached at {ride_request.ride.driver.email}. " \
-            f"Thank you for using Colby Rideshare and please help other students find rides by encouraging fellow Mules to join!" \
+            f"Thank you for using Colby Rideshare -- please help other students find rides by encouraging fellow Mules to join!" \
             f"\n\nSafe travels,\nThe Colby Rideshare Team"
         from_email = os.environ.get('EMAIL_USER')
         recipient_list = [ride_request.passenger.email]
