@@ -6,16 +6,23 @@
 
 {% block content %}
     <div class="row d-flex align-items-center">
-        <div class="col-md-4 mx-auto mt-4 text-center border border-secondary rounded">
+        <div class="col-md-4 mx-auto mt-4 border border-secondary rounded">
             <form method="POST">
                 {% csrf_token %}
-                <h2 class="mt-3">Contact the support team</h2>
-                <div class="form-group">
+                <fieldset class="form-group">
+                    <h2 class="border-bottom text-center mt-3 mb-4">Contact the support team</h2>
+                <div class="form-group mx-1">
+                    <div class="fieldWrapper col-md-8 mx-auto">
+                        <h6 class='text-muted text-center'>
+                            Please let us know how we can help and we'll get back to you within a few hours
+                        </h6>
+                    </div>
                     <label for="id_message">Message:</label>
-                    <textarea class="form-control" id="id_message" name="message" rows="4"></textarea>
+                    <textarea class="form-control" id="id_message" name="message" rows="6"></textarea>
                 </div>
-                <a class="btn btn-secondary mb-3 mt-3" href="{% url 'landing-page' %}">Back</a>
-                <button class="btn btn-primary mb-3 mt-3" type="submit" name="submit">Send</button>
+                <a class="btn btn-secondary mb-3 mt-3 mx-1" href="{% url 'landing-page' %}">Back</a>
+                <button class="btn btn-primary mb-3 mt-3 mx-1" type="submit" name="submit">Send</button>
+            </fieldset>
             </form>
         </div>
     </div>
