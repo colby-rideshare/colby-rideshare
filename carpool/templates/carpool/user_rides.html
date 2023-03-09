@@ -69,21 +69,11 @@
                     </div>
                     <div>
 
-
-                    {% if ride.driver == user %}
                         <a href="{% url 'ride-update' ride.id %}">
                             <button type="button" class="btn btn-primary">
                             Edit Ride
                             </button>
                         </a>
-                    {% elif ride.driver != user %}
-                        <a href="{% url 'ride-signup' ride.id %}">
-                            <button type="button" class="btn btn-primary">
-                            Contact Driver
-                            </button>
-                        </a>
-                    {% endif %}
-                          
 
                         
                         <!--button with modal, this was working

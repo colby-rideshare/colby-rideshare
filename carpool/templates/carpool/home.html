@@ -1,7 +1,7 @@
 {% extends 'carpool/base.html' %} 
 
 {% block title%}
-    <title> Rides Available </title>
+    <title> Available Rides </title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
     {{ form.media }}
@@ -82,55 +82,47 @@
                     <div>
 
 
-                    {% if ride.driver == user %}
-                        <a href="{% url 'ride-update' ride.id %}">
+                        {% comment %} <a href="{% url 'ride-signup' ride.id %}">
                             <button type="button" class="btn btn-primary">
-                            Edit Ride
+                            More Info
                             </button>
-                        </a>
-                    {% elif ride.driver != user %}
-                        <a href="{% url 'ride-signup' ride.id %}">
-                            <button type="button" class="btn btn-primary">
-                            Contact Driver
-                            </button>
-                        </a>
-                    {% endif %}
-                          
+                        </a> {% endcomment %}
 
                         
-                        <!--button with modal, this was working
                         <button type="button" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#Modal{{ride.id}}">
-                            Contact Driver
+                            More Info
                         </button>
     
                         <div class="modal fade" id="Modal{{ride.id}}" tabindex="-1" aria-labelledby="Modal{{ride.id}}Label" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                <h3 class="modal-title text-center" id="Modal{{ride.id}}Label">Contact {{ ride.driver.first_name }}</h3>
+                                <h3 class="modal-title" id="Modal{{ride.id}}Label">Ride Details</h3>
                                 <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     {% if ride.notes|length > 0 %}
                                         <h5>Notes from driver:</h5>
                                         <p>{{ ride.notes }}</p>
+                                        <br><h5>Room in the car:</h5>
+                                        <p>{{ ride.driver.first_name }} has room for {{ ride.capacity }} people and {{ ride.num_riders }} other people are on this ride</p>
+                                    {% else %}
+                                        <h5>Notes from driver:</h5>
+                                        <p>N/A</p>
+                                        <br><h5>Room in the car:</h5>
+                                        <p>{{ ride.driver.first_name }} has room for {{ ride.capacity }} people and {{ ride.num_riders }} other people are on this ride</p>
                                     {% endif %}            
                                 </div>
                                 <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
-                                {% if ride.driver != user %}
                                     <button
-                                        type="button" class="btn btn-primary" onclick="location.href='{% url 'ride-signup' ride.id %}'">Sign up
+                                        type="button" class="btn btn-primary" onclick="location.href='{% url 'ride-signup' ride.id %}'">Send a Message to {{ ride.driver.first_name }}
                                     </button>
-                                {% else %} 
-                                    <button
-                                        type="button" class="btn btn-primary" onclick="location.href='{% url 'ride-update' ride.id %}'">Edit ride
-                                    </button>
-                                {% endif %}
+
                                 </div>
                             </div>
                             </div>
-                        </div> -->
+                        </div>
 
 
                     </div>

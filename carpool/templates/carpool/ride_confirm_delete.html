@@ -5,17 +5,19 @@
 {% endblock title %}
 
 {% block content %}
-    <div class="content-section"> <!-- class names here are used for styling -->
+<div class="row">
+    <div class="col-md-4 mx-auto mt-4 border border-secondary rounded">
         <form method="POST">
             {% csrf_token %} <!-- django security features -->
             <fieldset class="form-group"> <!-- fieldset creates box around content -->
-                <legend class="border-bottom mb-4">Delete ride</legend>
-                <h2>Are you sure you want to delete ride from {{ride.origin}} to {{ride.destination}}?</h2>
+                <h2 class="border-bottom mb-4 mt-1 text-center">Delete ride</h2>
+                <p class="text-center">If you agreed to drive other people please ensure that they are able to find another ride before you cancel</p>
             </fieldset>
             <div class="form-group">
-                <a class="btn btn-outline-secondary" href="{% url 'my-rides' user.username %}">No, don't delete</a>
-                <button class="btn btn-outline-danger" type="submit">Yes, delete</button>
+                <a class="btn btn-secondary mb-3" href="{% url 'my-rides' user.username %}">No, don't delete</a>
+                <button class="btn btn-danger mb-3" type="submit">Yes, delete</button>
             </div>
         </form>
     </div>
+</div>
 {% endblock content %} 

@@ -9,18 +9,6 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 import os
 
-# old register method we are trying to overwrite
-# def register(request):
-#     if request.method == 'POST':
-#         form = UserRegisterForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             username = form.cleaned_data.get('username')
-#             messages.success(request, f'Account created for {username}')
-#             return redirect('login')
-#     else:
-#         form = UserRegisterForm()
-#     return render(request, 'users/register.html', {'form':form})
 
 def register(request):
     if request.method == 'POST':
@@ -35,6 +23,9 @@ def register(request):
                 profile = p_form.save(commit=False)
                 profile.user = user
                 p_form.save()
+                
+            #should send welcome email    
+            
             username = u_form.cleaned_data.get('username')
             messages.success(request, f'Account created for {username}')
             return redirect('login')

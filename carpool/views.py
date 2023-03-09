@@ -2,6 +2,9 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.contrib import messages
 from django.core.mail import send_mail
+from django.core.exceptions import PermissionDenied
+from django.forms import ValidationError
+from django.db.models import F
 from django.template.defaultfilters import date as date_filter
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
@@ -37,6 +40,7 @@ class RideListView(LoginRequiredMixin, ListView):
             if not queryset.exists():
                 messages.warning(self.request, 'No rides found for the selected date')
         queryset = queryset.exclude(driver=self.request.user)
+        queryset = queryset.exclude(num_riders__gte=F('capacity'))
         return queryset
     
     def get_context_data(self, **kwargs):
@@ -92,8 +96,11 @@ class UserRideListView(LoginRequiredMixin, ListView):
     paginate_by = 5
     
     def get_queryset(self):
-        user = get_object_or_404(User, username=self.kwargs.get('username'))  #either gets user's username or returns 404 error
-        return Ride.objects.filter(driver=user).order_by('departure_day')  #ordering needs to be done because query overrides it when stated as in RideListView
+        user = get_object_or_404(User, username=self.kwargs.get('username'))
+        if self.request.user == user:  # check if logged-in user is the same as the user being viewed
+            return Ride.objects.filter(driver=user).order_by('departure_day')
+        else:
+            raise PermissionDenied("You do not have permission to access this page")
     
     def get_context_data(self, **kwargs):
         #self.get_gas_price()
@@ -138,6 +145,9 @@ class RideUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return False
     
     def form_valid(self, form):
+        ride = self.get_object()
+        if 'capacity' in form.changed_data and form.cleaned_data['capacity'] < ride.num_riders:
+            raise ValidationError('Capacity cannot be less than the number of riders')
         response = super().form_valid(form)
         messages.success(self.request, 'Your ride has been updated successfully')
         return response
@@ -164,7 +174,7 @@ class RideSignUpView(LoginRequiredMixin, CreateView):
         
         #send email to driver
         subject = f"Colby Rideshare -- someone would like a ride from you"
-        message = f"{ride.driver.first_name},\n\n{self.request.user.first_name} {self.request.user.last_name} would like to join you on your upcoming trip.\n\n" \
+        message = f"Hi {ride.driver.first_name},\n\n{self.request.user.first_name} {self.request.user.last_name} would like to join you on your upcoming trip.\n\n" \
             f"Message from {self.request.user.first_name}:\n{form.cleaned_data['message']}\n\n" \
             f"Please visit this link to view the details of the ride request: {self.get_ride_request_url(ride_request)}\n\n" \
             f"Thank you for using Colby Rideshare and please help other students find rides by encouraging fellow Mules to join!" \
@@ -175,8 +185,9 @@ class RideSignUpView(LoginRequiredMixin, CreateView):
         
         #send email to passenger
         subject = f"Colby Rideshare -- your ride request was successful"
-        message = f"{self.request.user.first_name},\n\nYour ride request to {ride_request.destination} on {date_filter(ride.departure_day, 'F d')} was successful. " \
+        message = f"Hi {self.request.user.first_name},\n\nYour ride request to {ride_request.destination} on {date_filter(ride.departure_day, 'F d')} was successful. " \
             f"We have contacted {ride.driver.first_name} {ride.driver.last_name} and will let you know as soon as we hear back from them. " \
+            f"If you would like to follow up with your driver directly you can email {ride.driver.first_name} at {ride.driver.email}. " \
             f"Thank you for using Colby Rideshare and please help other students find rides by encouraging fellow Mules to join!" \
             f"\n\nBest,\nThe Colby Rideshare Team"
         from_email = os.environ.get('EMAIL_USER')
@@ -235,10 +246,15 @@ class RideRequestView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         ride_request.accepted = True
         ride_request.save()
         
+        #increment number of riders in the ride object
+        ride = ride_request.ride
+        ride.num_riders += 1
+        ride.save()
+        
         #send email to driver
         subject = f"Colby Rideshare -- ride request accepted"
-        message = f"{ride_request.ride.driver.first_name},\n\nThank you for offering to drive {ride_request.passenger.first_name} {ride_request.passenger.last_name} to {ride_request.destination}! " \
-            f"Your contribution is making a big difference in the Colby community. " \
+        message = f"Hi {ride_request.ride.driver.first_name},\n\nThank you for offering to drive {ride_request.passenger.first_name} {ride_request.passenger.last_name} to {ride_request.destination}! " \
+            f"Your contribution is a big help to the Colby community. " \
             f"{ride_request.passenger.first_name} should be reaching out to you soon to ensure you both are on the same page regarding the logistics of your trip. " \
             f"Please be mindful of {ride_request.passenger.first_name}'s travel plans and be sure to let {ride_request.passenger.first_name} know as soon as possible if anything changes. " \
             f"{ride_request.passenger.first_name} can be reached at {ride_request.passenger.email}. " \
@@ -250,7 +266,7 @@ class RideRequestView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         
         #send email to passenger
         subject = f"Colby Rideshare -- your ride request has been accepted"
-        message = f"{ride_request.passenger.first_name},\n\nGreat news -- {ride_request.ride.driver.first_name} {ride_request.ride.driver.last_name} is able to drive you to {ride_request.destination}! " \
+        message = f"Hi {ride_request.passenger.first_name},\n\nGreat news -- {ride_request.ride.driver.first_name} {ride_request.ride.driver.last_name} is able to drive you to {ride_request.destination}! " \
             f"Your ride will be leaving in the {ride_request.ride.time} on {date_filter(ride_request.ride.departure_day, 'F d')}. " \
             f"Please be sure to thank {ride_request.ride.driver.first_name} and to offer to chip in on gas costs -- it is more expensive than you think! " \
             f"It would be a good idea for you to reach out to {ride_request.ride.driver.first_name} directly and sort out the logistics of your trip. " \
