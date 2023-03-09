@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %} <!-- load crispy forms styling -->
 
 {% block title%}
-    <title> Login </title>
+    <title>Colby Rideshare | Login</title>
 {% endblock title %}
 
 {% block content %}
@@ -11,7 +11,7 @@
         <form method="POST">
             {% csrf_token %} <!-- django security features -->
             <fieldset class="form-group"> <!-- fieldset creates box around content -->
-                <legend class="border-bottom text-center mb-4">Log In</legend>
+                <legend class="border-bottom text-center mb-4">Login</legend>
                 {{ form|crispy }} <!-- |crispy applies crispy forms styling to form -->
             </fieldset>
             <div class="form-group text-center">
