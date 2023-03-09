@@ -48,4 +48,4 @@ To run the app locally, follow these steps:
 
 5. Open app on local machine
 
-  That's it! You can now open the app by visiting http://localhost:8000/ in your browser
+    That's it! You can now open the app by visiting http://localhost:8000/ in your browser
