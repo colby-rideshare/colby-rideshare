@@ -1,7 +1,7 @@
 {% extends 'carpool/base.html' %}
 
 {% block title%}
-    <title>Your New Ride</title>
+    <title>Requested Ride</title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
     {{ form.media }}
@@ -69,13 +69,19 @@
                     <img class="rounded-circle article-img mb-4" src="{{ ride_request.passenger.profile.image.url }}"/>
                     </a>
                 </div>
-                <div>
+                <div class="form-group">
                     <form method="POST" action="{% url 'ride-request' ride.pk ride_request.pk %}">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary mt-3 mb-3 mx-1">
                             Accept Ride
                         </button>
-                    </form>                    
+                    </form>    
+                    <form method="POST" action="{% url 'decline-ride' ride.pk ride_request.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger mx-1">
+                            Decline Ride
+                        </button>
+                    </form>                
                 </div>
             </td>    
         </tr>

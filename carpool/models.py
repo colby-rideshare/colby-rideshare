@@ -41,6 +41,7 @@ class RideRequest(models.Model):
     destination = models.CharField(max_length=100)
     message = models.TextField()
     accepted = models.BooleanField(default=False)
+    declined = models.BooleanField(default=False)
     
 #the purpose of this is to essentially serve as a timer
 #current_time is updated every time a user visits the rides page
