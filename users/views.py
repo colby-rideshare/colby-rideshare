@@ -27,9 +27,9 @@ def register(request):
             #send welcome email to user
             subject = "Welcome to Colby Rideshare!"
             message = f"Hi {user.first_name},\n\nThank you for signing up for Colby Rideshare! We're excited to have you as a part of our community. " \
-                f"Colby Rideshare was created for Colby students, by Colby students, to help members of our community get to and from campus seamlessly. " \
+                f"Colby Rideshare was created for Colby students, by Colby students, to help members of our community travel to and from campus seamlessly. " \
                 f"Whether you're looking for a ride to Portland Jetport or just looking for people to keep you company on a long drive back to New York, " \
-                f"we hope that Colby Rideshare will bring us closer as a community and ease some of the stress that many students have when making travel plans to and from Colby. " \
+                f"we hope that Colby Rideshare will bring us closer as a community and ease some of the stress that many students have when making travel plans. " \
                 f"Colby Rideshare is completely free to use, although riders are encouraged to chip in for drivers' gas costs.\n\n" \
                 f"To get started, simply log in at https://www.colbyrideshare.live with your username and password. From there, you can post an upcoming ride if you are driving or search for other ride offers. " \
                 f"Please don't hesitate to reach out to our support team at https://www.colbyrideshare.live/support/ if you have any questions, issues, or suggestions on how we can improve. " \
