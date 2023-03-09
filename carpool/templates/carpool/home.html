@@ -72,7 +72,7 @@
                 </td>
                 <td class="text-center">
                     <div class="text-above-image">
-                        {{ ride.driver.first_name }} {{ ride.driver.last_name }}
+                        <h5>{{ ride.driver.first_name }} {{ ride.driver.last_name }}</h5>
                     </div>
                     <div class="event-img">
                         <a href="{% url 'user-rides' ride.driver.username %}">
