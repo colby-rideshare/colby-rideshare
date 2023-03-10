@@ -56,6 +56,8 @@ class RideListView(LoginRequiredMixin, ListView):
         #self.get_gas_price()
         context = super().get_context_data(**kwargs)
         context['form'] = RideFilterForm()
+        context['is_mobile'] = self.request.user_agent.is_mobile
+        print(context['is_mobile'])
         for ride in context['rides']:
             ride.spots_left = ride.capacity - ride.num_riders
             ride.origin_code = ride.origin
