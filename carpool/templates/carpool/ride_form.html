@@ -25,13 +25,57 @@
 {% endblock title %}
 
 {% block content %}
+<section>
+    <div class="container">
+    <div id="driver-info" class="row">
+
+      <div class="col-md-6 mt-4 gx-5 mb-4">
+        <h3><strong>Help the Colby community and save on gas</strong></h3>
+        <p class='mt-4'><strong>How it works:</strong></p>
+        <ul class="text-muted mb-3">
+          <li>You post a ride using the form at the bottom of the page</li>
+            <li>A Google Maps display of your route along with the other details you provide is then displayed for other Colby students to see under the Riders page</li>
+          <li>If another student needs to get somewhere along your route, they can submit a ride request, which asks them to enter their trip details</li>
+          <li>We email you the ride request, showing you a side-by-side Google Maps view of your old route and hypothetical route if you were to accept (along with how much time it would add you)</li>
+          <li>Simply accept or decline the ride request with the click of a button -- we notify the rider for you so there's no need to do anything else</li>
+        </ul>
+        <p><strong>Why should I offer to drive?</strong></p>
+        <ul class="text-muted mb-3">
+          <li>It's a kind gesture, and offering to drive someone along your
+            way doesn't take much effort and helps the Colby community</li>
+            <li>Gas is expensive! You can ask your riders to split gas costs with you</li>
+          <li>Only fellow Colby students are allowed to join, and you might 
+            just become friends with someone new</li>
+          <li>Driving long distances has a major carbon footprint and by carpooling
+            you're doing your part to minimize the impact on the planet
+          </li>
+          <li>Ultimately, you're allowed to decline any ride request if you feel the ride 
+            is too far out of your way
+          </li>
+        </ul>
+      </div>
+
+      <div class="col-md-6 gx-5 mt-4 mb-4">
+        <div class="bg-image hover-overlay ripple shadow-2-strong" data-mdb-ripple-color="light">
+          <img src="https://afa.colby.edu/wp-content/uploads/2022/05/Miller-fall-e1652452364851.png" class="img-fluid" />
+            <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  </section>
+
+
+
     <div class="row">
-        <div class="col-md-8 mx-auto mt-4 border border-secondary rounded">
+        <div class="col-md-8 mx-auto mt-4 mb-4 border border-secondary rounded">
             <form method="POST">
                 {% csrf_token %} <!-- django security features -->
 
                 <fieldset class="form-group">
-                    <legend class="border-bottom mt-3 mb-4" style="text-align: center;">Enter information on your ride:</legend>
+                    <legend class="border-bottom mt-3 mb-4" style="text-align: center;">Post your upcoming ride details:</legend>
                     {{ form.non_field_errors }}
                     
                     <div class="fieldWrapper row mx-4 mb-1">
