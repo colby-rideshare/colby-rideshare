@@ -149,9 +149,9 @@
                                 </div>
                                 <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
-                                    <button
-                                        type="button" class="btn btn-primary" onclick="location.href='{% url 'ride-signup' ride.id %}'">Send a Message to {{ ride.driver.first_name }}
-                                    </button>
+                                    <a
+                                        type="button" class="btn btn-primary" href="{% url 'ride-info' ride.pk %}">Send a Message to {{ ride.driver.first_name }}
+                                </a>
 
                                 </div>
                             </div>
