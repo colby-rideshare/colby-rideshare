@@ -25,10 +25,9 @@
             <p>N/A</p>
         {% endif %}         
     </div>
-    <button type="button" class="btn btn-secondary">Close</button>
-        <button
-            type="button" class="btn btn-primary" href='#'>Send a Message to {{ ride.driver.first_name }}
-        </button>
+        <a
+            type="button" class="btn btn-primary" href="{% url 'ride-signup' ride.id %}">Send a Message to {{ ride.driver.first_name }}
+        </a>
 
 </div>
 
