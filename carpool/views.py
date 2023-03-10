@@ -8,7 +8,7 @@ from django.db.models import F
 from django.template.defaultfilters import date as date_filter
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from .models import Ride, RideRequest, GasPrice
 from .forms import RideSignUpForm, RideCreateForm, RideUpdateForm, RideFilterForm, RideRequestForm, RideDeclineRequestForm
 import os
@@ -56,6 +56,8 @@ class RideListView(LoginRequiredMixin, ListView):
         #self.get_gas_price()
         context = super().get_context_data(**kwargs)
         context['form'] = RideFilterForm()
+        context['is_mobile'] = self.request.user_agent.is_mobile
+        print(context['is_mobile'])
         for ride in context['rides']:
             ride.spots_left = ride.capacity - ride.num_riders
             ride.origin_code = ride.origin
@@ -96,6 +98,10 @@ class RideListView(LoginRequiredMixin, ListView):
             gas_model.next_update = current_time + timedelta(weeks=1)
             gas_model.gas_price = portland_gas_price
             gas_model.save()
+            
+class RideInfoView(DetailView):
+    model = Ride
+    template_name = 'carpool/ride_info_mobile.html'
     
 #this is view listing all rides a driver has posted
 class UserRideListView(LoginRequiredMixin, ListView):

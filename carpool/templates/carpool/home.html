@@ -120,12 +120,15 @@
                             </button>
                         </a> {% endcomment %}
 
-                        
+                        {% if is_mobile != True%}
                         <button type="button" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#Modal{{ride.id}}">
                             More Info
                         </button>
+                        {% else %}
+                        <a type="button" class="btn btn-primary" href="{% url 'ride-info' ride.pk %}"> More Info </a>
+                        {% endif %}
     
-                        <div class="modal fade" id="Modal{{ride.id}}" tabindex="-1" aria-labelledby="Modal{{ride.id}}Label" aria-hidden="true">
+                        <div class="modal fade modal-fullscreen" id="Modal{{ride.id}}" tabindex="-1" aria-labelledby="Modal{{ride.id}}Label" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-scrollable">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -149,7 +152,7 @@
                                 </div>
                                 <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
-                                    <button
+                                     <button
                                         type="button" class="btn btn-primary" onclick="location.href='{% url 'ride-signup' ride.id %}'">Send a Message to {{ ride.driver.first_name }}
                                     </button>
 
